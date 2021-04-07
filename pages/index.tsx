@@ -1,7 +1,17 @@
-const Home = () => (
-  <div>
-    <p>Hello World!</p>
-  </div>
-)
+import {CustomNextPage} from "types"
+import {getSidebarLayout} from "../components/layouts/SidebarLayout"
 
-export default Home
+const HomePage: CustomNextPage = () => {
+  return (
+    <div>
+      <p>Hello World!</p>
+    </div>
+  )
+}
+
+HomePage.getLayout = (page) => {
+  const Layout = <>{getSidebarLayout(page)}</>
+  return Layout
+}
+
+export default HomePage
