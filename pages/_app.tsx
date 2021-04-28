@@ -1,10 +1,12 @@
 import CssBaseline from "@material-ui/core/CssBaseline"
 import {ThemeProvider} from "@material-ui/core/styles"
 
-import {CustomNextPage, GetLayoutFunc} from "../types"
-import {themeDark, themeLight} from "lib/theme"
+import {CustomNextPage, GetLayoutFunc} from "@/types"
+import {themeDark, themeLight} from "theme/theme"
 import {AppProps} from "next/app"
 import React from "react"
+import {useApollo} from "apollo"
+import {ApolloProvider} from "@apollo/client"
 
 type PageProps = Record<string, unknown>
 
@@ -25,13 +27,15 @@ export default function MyApp(props: Props) {
   }, [])
 
   const isDarkTheme = false
-
+  const client = useApollo()
   const getLayout: GetLayoutFunc = Component.getLayout || ((page) => <>{page}</>)
 
   return (
     <ThemeProvider theme={isDarkTheme ? themeDark : themeLight}>
-      <CssBaseline />
-      {getLayout(<Component {...pageProps} />)}
+      <ApolloProvider client={client}>
+        <CssBaseline />
+        {getLayout(<Component {...pageProps} />)}
+      </ApolloProvider>
     </ThemeProvider>
   )
 }
