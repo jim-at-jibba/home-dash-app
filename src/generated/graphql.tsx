@@ -16,8 +16,8 @@ export type Scalars = {
   DateTime: any
 }
 
-export type EnviroMessage = {
-  __typename?: "EnviroMessage"
+export type Enviro = {
+  __typename?: "Enviro"
   temperature: Scalars["Float"]
   pressure: Scalars["Float"]
   humidity: Scalars["Float"]
@@ -28,27 +28,71 @@ export type EnviroMessage = {
   serial?: Maybe<Scalars["String"]>
 }
 
-export type LatestMessageInput = {
-  topic: Scalars["String"]
-}
-
-export type MqttMessage = {
-  __typename?: "MqttMessage"
+export type EnviroMessage = {
+  __typename?: "EnviroMessage"
   id: Scalars["ID"]
   topic: Scalars["String"]
-  message: EnviroMessage
+  message: Enviro
   createdAt: Scalars["DateTime"]
   updatedAt: Scalars["DateTime"]
 }
 
+export type LatestMessageInput = {
+  topic: Scalars["String"]
+}
+
+export type Mqtt = EnviroMessage | SwitchMessage | TemperatureMessage
+
 export type Query = {
   __typename?: "Query"
   me: Scalars["String"]
-  getLatestMessage: MqttMessage
+  getLatestMessage: Mqtt
 }
 
 export type QueryGetLatestMessageArgs = {
   input: LatestMessageInput
+}
+
+export type Switch = {
+  __typename?: "Switch"
+  state: Scalars["Boolean"]
+}
+
+export type SwitchMessage = {
+  __typename?: "SwitchMessage"
+  id: Scalars["ID"]
+  topic: Scalars["String"]
+  message: Switch
+  createdAt: Scalars["DateTime"]
+  updatedAt: Scalars["DateTime"]
+}
+
+export type Temperature = {
+  __typename?: "Temperature"
+  temperature: Scalars["Float"]
+  humidity: Scalars["Float"]
+}
+
+export type TemperatureMessage = {
+  __typename?: "TemperatureMessage"
+  id: Scalars["ID"]
+  topic: Scalars["String"]
+  message: Temperature
+  createdAt: Scalars["DateTime"]
+  updatedAt: Scalars["DateTime"]
+}
+
+export type GetLatestTempHumidityQueryVariables = Exact<{
+  input: LatestMessageInput
+}>
+
+export type GetLatestTempHumidityQuery = {__typename?: "Query"} & {
+  getLatestMessage:
+    | ({__typename?: "EnviroMessage"} & Pick<EnviroMessage, "id" | "topic"> & {
+          message: {__typename?: "Enviro"} & Pick<Enviro, "temperature" | "humidity">
+        })
+    | {__typename?: "SwitchMessage"}
+    | {__typename?: "TemperatureMessage"}
 }
 
 export type GetLatestMessageByTopicQueryVariables = Exact<{
@@ -56,18 +100,103 @@ export type GetLatestMessageByTopicQueryVariables = Exact<{
 }>
 
 export type GetLatestMessageByTopicQuery = {__typename?: "Query"} & {
-  getLatestMessage: {__typename?: "MqttMessage"} & Pick<MqttMessage, "id" | "topic"> & {
-      message: {__typename?: "EnviroMessage"} & Pick<EnviroMessage, "temperature">
-    }
+  getLatestMessage:
+    | ({__typename?: "EnviroMessage"} & Pick<EnviroMessage, "id"> & {
+          message: {__typename?: "Enviro"} & Pick<Enviro, "temperature" | "humidity">
+        })
+    | ({__typename?: "SwitchMessage"} & Pick<SwitchMessage, "id"> & {
+          message: {__typename?: "Switch"} & Pick<Switch, "state">
+        })
+    | ({__typename?: "TemperatureMessage"} & Pick<TemperatureMessage, "id"> & {
+          message: {__typename?: "Temperature"} & Pick<Temperature, "temperature" | "humidity">
+        })
 }
 
+export const GetLatestTempHumidityDocument = gql`
+  query GetLatestTempHumidity($input: LatestMessageInput!) {
+    getLatestMessage(input: $input) {
+      ... on EnviroMessage {
+        id
+        topic
+        message {
+          temperature
+          humidity
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetLatestTempHumidityQuery__
+ *
+ * To run a query within a React component, call `useGetLatestTempHumidityQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLatestTempHumidityQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLatestTempHumidityQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetLatestTempHumidityQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetLatestTempHumidityQuery,
+    GetLatestTempHumidityQueryVariables
+  >,
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<GetLatestTempHumidityQuery, GetLatestTempHumidityQueryVariables>(
+    GetLatestTempHumidityDocument,
+    options,
+  )
+}
+export function useGetLatestTempHumidityLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetLatestTempHumidityQuery,
+    GetLatestTempHumidityQueryVariables
+  >,
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<GetLatestTempHumidityQuery, GetLatestTempHumidityQueryVariables>(
+    GetLatestTempHumidityDocument,
+    options,
+  )
+}
+export type GetLatestTempHumidityQueryHookResult = ReturnType<typeof useGetLatestTempHumidityQuery>
+export type GetLatestTempHumidityLazyQueryHookResult = ReturnType<
+  typeof useGetLatestTempHumidityLazyQuery
+>
+export type GetLatestTempHumidityQueryResult = Apollo.QueryResult<
+  GetLatestTempHumidityQuery,
+  GetLatestTempHumidityQueryVariables
+>
 export const GetLatestMessageByTopicDocument = gql`
   query GetLatestMessageByTopic($input: LatestMessageInput!) {
     getLatestMessage(input: $input) {
-      id
-      topic
-      message {
-        temperature
+      ... on SwitchMessage {
+        id
+        message {
+          state
+        }
+      }
+      ... on TemperatureMessage {
+        id
+        message {
+          temperature
+          humidity
+        }
+      }
+      ... on EnviroMessage {
+        id
+        message {
+          temperature
+          humidity
+        }
       }
     }
   }
@@ -130,6 +259,8 @@ export interface PossibleTypesResultData {
   }
 }
 const result: PossibleTypesResultData = {
-  possibleTypes: {},
+  possibleTypes: {
+    Mqtt: ["EnviroMessage", "SwitchMessage", "TemperatureMessage"],
+  },
 }
 export default result
