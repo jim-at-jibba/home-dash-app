@@ -67,7 +67,7 @@ const TempHumidityGauge: FunctionComponent<Props> = ({title}) => {
                 id="gauge-chart2"
                 nrOfLevels={20}
                 percent={result != null ? result.temperature : undefined}
-                textColor="#000"
+                textColor="#e4f0fb"
                 formatTextValue={(temp) => `${temp}℃`}
               />
             </Box>
@@ -76,7 +76,7 @@ const TempHumidityGauge: FunctionComponent<Props> = ({title}) => {
                 id="gauge-chart3"
                 nrOfLevels={20}
                 percent={result != null ? result.humidity : undefined}
-                textColor="#000"
+                textColor="#e4f0fb"
               />
             </Box>
           </Box>
