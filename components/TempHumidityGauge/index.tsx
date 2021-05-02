@@ -64,7 +64,7 @@ const TempHumidityGauge: FunctionComponent<Props> = ({title}) => {
           <Box className={classes.guagesWrapper}>
             <Box className={classes.guageContainer}>
               <GaugeChart
-                id="gauge-chart2"
+                id="temp-gauge"
                 nrOfLevels={20}
                 percent={result != null ? result.temperature : undefined}
                 textColor="#e4f0fb"
@@ -73,7 +73,7 @@ const TempHumidityGauge: FunctionComponent<Props> = ({title}) => {
             </Box>
             <Box className={classes.guageContainer}>
               <GaugeChart
-                id="gauge-chart3"
+                id="humidity-gauge"
                 nrOfLevels={20}
                 percent={result != null ? result.humidity : undefined}
                 textColor="#e4f0fb"
