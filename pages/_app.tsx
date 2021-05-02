@@ -7,6 +7,7 @@ import {AppProps} from "next/app"
 import React from "react"
 import {useApollo} from "apollo"
 import {ApolloProvider} from "@apollo/client"
+import Head from "next/head"
 
 type PageProps = Record<string, unknown>
 
@@ -26,16 +27,25 @@ export default function MyApp(props: Props) {
     }
   }, [])
 
-  const isDarkTheme = false
+  const isDarkTheme = true
   const client = useApollo()
   const getLayout: GetLayoutFunc = Component.getLayout || ((page) => <>{page}</>)
 
   return (
-    <ThemeProvider theme={isDarkTheme ? themeDark : themeLight}>
-      <ApolloProvider client={client}>
-        <CssBaseline />
-        {getLayout(<Component {...pageProps} />)}
-      </ApolloProvider>
-    </ThemeProvider>
+    <>
+      <Head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Fira+Mono:400,500,700&display=swap"
+        />
+      </Head>
+      <ThemeProvider theme={isDarkTheme ? themeDark : themeLight}>
+        <ApolloProvider client={client}>
+          <CssBaseline />
+
+          {getLayout(<Component {...pageProps} />)}
+        </ApolloProvider>
+      </ThemeProvider>
+    </>
   )
 }
