@@ -14,7 +14,7 @@ const TempHumidityGauge: FunctionComponent<Props> = ({title}) => {
   const classes = useStyles()
 
   const {data, loading, error} = useGetLatestMessageByTopicQuery({
-    variables: {input: {topic: "enviro"}},
+    variables: {input: {topic: "living-room/enviro"}},
   })
 
   console.log(data, loading, error)
@@ -51,7 +51,7 @@ const TempHumidityGauge: FunctionComponent<Props> = ({title}) => {
   const result = resolveMessage(data?.getLatestMessage)
 
   return (
-    <Paper className={classes.paperRoot}>
+    <Paper className={classes.paperRoot} variant="outlined">
       {data?.getLatestMessage == null || loading ? (
         <Box width="100%">
           <LinearProgress />
