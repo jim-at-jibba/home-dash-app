@@ -1,10 +1,13 @@
+import TempHumidityGauge from "@/components/TempHumidityGauge"
+import AirQuality from "@/components/AirQuality"
 import {CustomNextPage} from "types"
 import {getSidebarLayout} from "../components/layouts/SidebarLayout"
 
 const HomePage: CustomNextPage = () => {
   return (
-    <div>
-      <p>Hello World!</p>
+    <div style={{marginTop: 50}}>
+      <TempHumidityGauge title="Office Temp and Humidity" />
+      <AirQuality title="Indoor Air Quality" />
     </div>
   )
 }
