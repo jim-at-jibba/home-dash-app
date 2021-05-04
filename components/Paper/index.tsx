@@ -14,7 +14,7 @@ const DashboardCard: FunctionComponent<Props> = ({title, loading, error, childre
   const classes = useStyles()
 
   if (error) {
-    return <Alert severity="error">Unable to retrieve the office temp</Alert>
+    return <Alert severity="error">Unable to retrieve data</Alert>
   }
 
   return (
