@@ -1,11 +1,10 @@
-import {LinearProgress, makeStyles, Theme} from "@material-ui/core"
+import {makeStyles, Theme} from "@material-ui/core"
 import Box from "@material-ui/core/Box"
-import Typography from "@material-ui/core/Typography"
-import Paper from "@material-ui/core/Paper"
 import React, {FunctionComponent} from "react"
 import GaugeChart from "react-gauge-chart"
 import {GetLatestMessageByTopicQuery, useGetLatestMessageByTopicQuery} from "src/generated/graphql"
 import {Alert} from "@material-ui/lab"
+import DashboardCard from "../Paper"
 
 interface Props {
   title: string
@@ -51,38 +50,27 @@ const TempHumidityGauge: FunctionComponent<Props> = ({title}) => {
   const result = resolveMessage(data?.getLatestMessage)
 
   return (
-    <Paper className={classes.paperRoot} variant="outlined">
-      {data?.getLatestMessage == null || loading ? (
-        <Box width="100%">
-          <LinearProgress />
+    <DashboardCard title={title} loading={loading} error={error}>
+      <Box className={classes.guagesWrapper}>
+        <Box className={classes.guageContainer}>
+          <GaugeChart
+            id="temp-gauge"
+            nrOfLevels={20}
+            percent={result != null ? result.temperature : undefined}
+            textColor="#e4f0fb"
+            formatTextValue={(temp) => `${temp}℃`}
+          />
         </Box>
-      ) : (
-        <>
-          <Box pb={2}>
-            <Typography variant="h4">{title}</Typography>
-          </Box>
-          <Box className={classes.guagesWrapper}>
-            <Box className={classes.guageContainer}>
-              <GaugeChart
-                id="temp-gauge"
-                nrOfLevels={20}
-                percent={result != null ? result.temperature : undefined}
-                textColor="#e4f0fb"
-                formatTextValue={(temp) => `${temp}℃`}
-              />
-            </Box>
-            <Box className={classes.guageContainer}>
-              <GaugeChart
-                id="humidity-gauge"
-                nrOfLevels={20}
-                percent={result != null ? result.humidity : undefined}
-                textColor="#e4f0fb"
-              />
-            </Box>
-          </Box>
-        </>
-      )}
-    </Paper>
+        <Box className={classes.guageContainer}>
+          <GaugeChart
+            id="humidity-gauge"
+            nrOfLevels={20}
+            percent={result != null ? result.humidity : undefined}
+            textColor="#e4f0fb"
+          />
+        </Box>
+      </Box>
+    </DashboardCard>
   )
 }
 
