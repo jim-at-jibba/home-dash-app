@@ -1,4 +1,4 @@
-import {makeStyles, Theme} from "@material-ui/core"
+import {makeStyles} from "@material-ui/core"
 import Box from "@material-ui/core/Box"
 import React, {FunctionComponent} from "react"
 import GaugeChart from "react-gauge-chart"
@@ -74,17 +74,7 @@ const TempHumidityGauge: FunctionComponent<Props> = ({title}) => {
   )
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  paperRoot: {
-    width: "100%",
-    maxWidth: 600,
-    display: "flex",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    paddingTop: theme.spacing(4),
-    alignItems: "center",
-    minHeight: "60px",
-  },
+const useStyles = makeStyles(() => ({
   guagesWrapper: {
     width: "100%",
     display: "flex",
