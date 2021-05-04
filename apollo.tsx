@@ -2,7 +2,7 @@ import {ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject} from "@apo
 import {useMemo} from "react"
 
 const httpLink = new HttpLink({
-  uri: `http://127.0.0.1:4000/graphql`,
+  uri: `http://192.168.68.106:4000/graphql`,
 })
 
 function createApolloClient() {
