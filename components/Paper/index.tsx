@@ -26,7 +26,7 @@ const DashboardCard: FunctionComponent<Props> = ({title, loading, error, childre
       ) : (
         <>
           <Box pb={2}>
-            <Typography variant="h4">{title}</Typography>
+            <Typography variant="h5">{title}</Typography>
           </Box>
           <>{children}</>
         </>
@@ -45,6 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: theme.spacing(4),
     alignItems: "center",
     minHeight: "60px",
+    height: "100%",
   },
 }))
 

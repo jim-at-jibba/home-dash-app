@@ -8,7 +8,7 @@ const HomePage: CustomNextPage = () => {
   return (
     <div style={{marginTop: 50, display: "flex"}}>
       <Box mr={2}>
-        <TempHumidityGauge title="Office Temp and Humidity" />
+        <TempHumidityGauge title="Living room Temp and Humidity" />
       </Box>
       <Box>
         <AirQuality title="Indoor Air Quality" />
