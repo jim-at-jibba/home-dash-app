@@ -64,6 +64,7 @@ export type Query = {
   me: Scalars["String"]
   getLatestMessage: Mqtt
   getLatestAirQuality: LatestAirQualityOutput
+  getLastWeeksMessage: Array<Mqtt>
 }
 
 export type QueryGetLatestMessageArgs = {
@@ -71,6 +72,10 @@ export type QueryGetLatestMessageArgs = {
 }
 
 export type QueryGetLatestAirQualityArgs = {
+  input: LatestMessageInput
+}
+
+export type QueryGetLastWeeksMessageArgs = {
   input: LatestMessageInput
 }
 
@@ -114,6 +119,20 @@ export type GetLatestTempHumidityQuery = {__typename?: "Query"} & {
         })
     | {__typename?: "SwitchMessage"}
     | {__typename?: "TemperatureMessage"}
+}
+
+export type GetLastWeeksTempHumidityQueryVariables = Exact<{
+  input: LatestMessageInput
+}>
+
+export type GetLastWeeksTempHumidityQuery = {__typename?: "Query"} & {
+  getLastWeeksMessage: Array<
+    | ({__typename?: "EnviroMessage"} & Pick<EnviroMessage, "topic" | "id" | "createdAt"> & {
+          message: {__typename?: "Enviro"} & Pick<Enviro, "temperature" | "humidity">
+        })
+    | {__typename?: "SwitchMessage"}
+    | {__typename?: "TemperatureMessage"}
+  >
 }
 
 export type GetLatestAirQualityQueryVariables = Exact<{
@@ -206,6 +225,72 @@ export type GetLatestTempHumidityLazyQueryHookResult = ReturnType<
 export type GetLatestTempHumidityQueryResult = Apollo.QueryResult<
   GetLatestTempHumidityQuery,
   GetLatestTempHumidityQueryVariables
+>
+export const GetLastWeeksTempHumidityDocument = gql`
+  query GetLastWeeksTempHumidity($input: LatestMessageInput!) {
+    getLastWeeksMessage(input: $input) {
+      ... on EnviroMessage {
+        topic
+        id
+        message {
+          temperature
+          humidity
+        }
+        createdAt
+      }
+    }
+  }
+`
+
+/**
+ * __useGetLastWeeksTempHumidityQuery__
+ *
+ * To run a query within a React component, call `useGetLastWeeksTempHumidityQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLastWeeksTempHumidityQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLastWeeksTempHumidityQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetLastWeeksTempHumidityQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetLastWeeksTempHumidityQuery,
+    GetLastWeeksTempHumidityQueryVariables
+  >,
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<GetLastWeeksTempHumidityQuery, GetLastWeeksTempHumidityQueryVariables>(
+    GetLastWeeksTempHumidityDocument,
+    options,
+  )
+}
+export function useGetLastWeeksTempHumidityLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetLastWeeksTempHumidityQuery,
+    GetLastWeeksTempHumidityQueryVariables
+  >,
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<GetLastWeeksTempHumidityQuery, GetLastWeeksTempHumidityQueryVariables>(
+    GetLastWeeksTempHumidityDocument,
+    options,
+  )
+}
+export type GetLastWeeksTempHumidityQueryHookResult = ReturnType<
+  typeof useGetLastWeeksTempHumidityQuery
+>
+export type GetLastWeeksTempHumidityLazyQueryHookResult = ReturnType<
+  typeof useGetLastWeeksTempHumidityLazyQuery
+>
+export type GetLastWeeksTempHumidityQueryResult = Apollo.QueryResult<
+  GetLastWeeksTempHumidityQuery,
+  GetLastWeeksTempHumidityQueryVariables
 >
 export const GetLatestAirQualityDocument = gql`
   query GetLatestAirQuality($input: LatestMessageInput!) {

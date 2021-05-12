@@ -1,5 +1,6 @@
 import Box from "@material-ui/core/Box"
 import TempHumidityGauge from "@/components/TempHumidityGauge"
+import TempHumidityGraph from "@/components/TempHumidityWeek"
 import AirQuality from "@/components/AirQuality"
 import {CustomNextPage} from "types"
 import {getSidebarLayout} from "../components/layouts/SidebarLayout"
@@ -12,6 +13,9 @@ const HomePage: CustomNextPage = () => {
       </Box>
       <Box>
         <AirQuality title="Indoor Air Quality" />
+      </Box>
+      <Box>
+        <TempHumidityGraph title="Temp" />
       </Box>
     </div>
   )
