@@ -352,6 +352,49 @@
         "possibleTypes": null
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "LastXDaysMessageInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "topic",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "numberDays",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
         "kind": "OBJECT",
         "name": "LatestAirQualityOutput",
         "description": null,
@@ -535,7 +578,7 @@
             "deprecationReason": null
           },
           {
-            "name": "getLastWeeksMessage",
+            "name": "getLastXDaysMessage",
             "description": null,
             "args": [
               {
@@ -546,7 +589,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "LatestMessageInput",
+                    "name": "LastXDaysMessageInput",
                     "ofType": null
                   }
                 },

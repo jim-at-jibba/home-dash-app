@@ -2,7 +2,7 @@ import {makeStyles} from "@material-ui/core"
 import React, {FunctionComponent} from "react"
 import {Alert} from "@material-ui/lab"
 import DashboardCard from "../Paper"
-import {useGetLastWeeksTempHumidityQuery} from "src/generated/graphql"
+import {useGetLastXDaysTempHumidityQuery} from "src/generated/graphql"
 
 interface Props {
   title: string
@@ -11,8 +11,8 @@ const TempHumidityGraph: FunctionComponent<Props> = ({title}) => {
   const classes = useStyles()
   console.log(classes)
 
-  const {data, loading, error} = useGetLastWeeksTempHumidityQuery({
-    variables: {input: {topic: "living-room/enviro"}},
+  const {data, loading, error} = useGetLastXDaysTempHumidityQuery({
+    variables: {input: {topic: "living-room/enviro", numberDays: 3}},
   })
 
   console.log(data, loading, error)
