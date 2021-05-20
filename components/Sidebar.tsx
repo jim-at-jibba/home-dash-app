@@ -3,6 +3,8 @@ import Divider from "@material-ui/core/Divider"
 import List from "@material-ui/core/List"
 import ListItem from "@material-ui/core/ListItem"
 import ListItemIcon from "@material-ui/core/ListItemIcon"
+import AddBoxIcon from "@material-ui/icons/AddBox"
+import MenuBookIcon from "@material-ui/icons/MenuBook"
 import ListItemText from "@material-ui/core/ListItemText"
 import ListSubheader from "@material-ui/core/ListSubheader"
 import {makeStyles, useTheme} from "@material-ui/core/styles"
@@ -62,9 +64,39 @@ const Sidebar: FunctionComponent<Props> = ({open, handleDrawerClose}) => {
           <MenuItemNext path="/office" label="Office">
             <ImportantDevicesIcon />
           </MenuItemNext>
-          <Divider />
           <MenuItemNext path="/plants" label="Plants">
             <LocalFloristIcon />
+          </MenuItemNext>
+        </List>
+
+        <Divider />
+
+        <List component="nav">
+          <MenuItemNext path="/plants" label="Plants">
+            <LocalFloristIcon />
+          </MenuItemNext>
+        </List>
+
+        <Divider />
+
+        <List
+          subheader={
+            <ListSubheader
+              className={clsx({
+                [classes.listingSubheadingOpen]: open,
+                [classes.listingSubheadingClosed]: !open,
+              })}
+            >
+              Recipes
+            </ListSubheader>
+          }
+          component="nav"
+        >
+          <MenuItemNext path="/recipes" label="Recipes">
+            <MenuBookIcon />
+          </MenuItemNext>
+          <MenuItemNext path="/recipes/add" label="New recipe">
+            <AddBoxIcon />
           </MenuItemNext>
         </List>
       </Box>
