@@ -4,20 +4,24 @@ import TempHumidityGraph from "@/components/TempHumidityWeek"
 import AirQuality from "@/components/AirQuality"
 import {CustomNextPage} from "types"
 import {getSidebarLayout} from "../components/layouts/SidebarLayout"
+import React from "react"
+import Content from "@/components/Content"
 
 const HomePage: CustomNextPage = () => {
   return (
-    <div style={{marginTop: 50, display: "flex"}}>
-      <Box mr={2}>
-        <TempHumidityGauge title="Living room Temp and Humidity" />
+    <Content>
+      <Box style={{marginTop: 50, display: "flex", flexDirection: "row"}}>
+        <Box mr={2}>
+          <TempHumidityGauge title="Living room Temp and Humidity" />
+        </Box>
+        <Box>
+          <AirQuality title="Indoor Air Quality" />
+        </Box>
       </Box>
       <Box>
-        <AirQuality title="Indoor Air Quality" />
+        <TempHumidityGraph title="3 day temp" />
       </Box>
-      <Box>
-        <TempHumidityGraph title="Temp" />
-      </Box>
-    </div>
+    </Content>
   )
 }
 

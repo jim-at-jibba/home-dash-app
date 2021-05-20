@@ -47,6 +47,14 @@ export type EnviroMessage = {
   updatedAt: Scalars["DateTime"]
 }
 
+export type GetRecipeByIdInput = {
+  id: Scalars["String"]
+}
+
+export type IngredientsInput = {
+  ingredient: Scalars["String"]
+}
+
 export type LastXDaysMessageInput = {
   topic: Scalars["String"]
   numberDays: Scalars["Float"]
@@ -64,12 +72,23 @@ export type LatestMessageInput = {
 
 export type Mqtt = EnviroMessage | SwitchMessage | TemperatureMessage
 
+export type Mutation = {
+  __typename?: "Mutation"
+  createRecipe: RecipeFull
+}
+
+export type MutationCreateRecipeArgs = {
+  input: RecipeInput
+}
+
 export type Query = {
   __typename?: "Query"
   me: Scalars["String"]
   getLatestMessage: Mqtt
   getLatestAirQuality: LatestAirQualityOutput
   getLastXDaysMessage: Array<Mqtt>
+  getRecipeById: RecipeFull
+  getRecipes: Array<RecipeDetails>
 }
 
 export type QueryGetLatestMessageArgs = {
@@ -82,6 +101,79 @@ export type QueryGetLatestAirQualityArgs = {
 
 export type QueryGetLastXDaysMessageArgs = {
   input: LastXDaysMessageInput
+}
+
+export type QueryGetRecipeByIdArgs = {
+  input: GetRecipeByIdInput
+}
+
+export type RecipeDetails = {
+  __typename?: "RecipeDetails"
+  id: Scalars["ID"]
+  name: Scalars["String"]
+  course: Scalars["String"]
+  category: Scalars["String"]
+  description: Scalars["String"]
+  image?: Maybe<Scalars["String"]>
+  cookTime: Scalars["Float"]
+  prepTime: Scalars["Float"]
+  serves: Scalars["Float"]
+  createdAt: Scalars["DateTime"]
+  updatedAt: Scalars["DateTime"]
+}
+
+export type RecipeFull = {
+  __typename?: "RecipeFull"
+  id: Scalars["ID"]
+  name: Scalars["String"]
+  course: Scalars["String"]
+  category: Scalars["String"]
+  description: Scalars["String"]
+  ingredients: Array<RecipeIngredients>
+  steps: Array<RecipeSteps>
+  image?: Maybe<Scalars["String"]>
+  cookTime: Scalars["Float"]
+  prepTime: Scalars["Float"]
+  serves: Scalars["Float"]
+  createdAt: Scalars["DateTime"]
+  updatedAt: Scalars["DateTime"]
+}
+
+export type RecipeIngredients = {
+  __typename?: "RecipeIngredients"
+  id: Scalars["ID"]
+  recipeId: Scalars["String"]
+  ingredient: Scalars["String"]
+  createdAt: Scalars["DateTime"]
+  updatedAt: Scalars["DateTime"]
+}
+
+export type RecipeInput = {
+  name: Scalars["String"]
+  courseId: Scalars["String"]
+  categoryId: Scalars["String"]
+  description: Scalars["String"]
+  ingredients: Array<IngredientsInput>
+  steps: Array<StepsInput>
+  recipeImage: Scalars["String"]
+  cookTime: Scalars["Float"]
+  prepTime: Scalars["Float"]
+  serves: Scalars["Float"]
+}
+
+export type RecipeSteps = {
+  __typename?: "RecipeSteps"
+  id: Scalars["ID"]
+  recipeId: Scalars["String"]
+  stepNumber: Scalars["Float"]
+  stepDescription: Scalars["String"]
+  createdAt: Scalars["DateTime"]
+  updatedAt: Scalars["DateTime"]
+}
+
+export type StepsInput = {
+  stepNumber: Scalars["Float"]
+  stepDescription: Scalars["String"]
 }
 
 export type Switch = {
