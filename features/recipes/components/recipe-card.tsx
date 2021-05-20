@@ -1,4 +1,4 @@
-import React from "react"
+import React, {FunctionComponent} from "react"
 import {makeStyles, Theme, createStyles} from "@material-ui/core/styles"
 import clsx from "clsx"
 import Card from "@material-ui/core/Card"
@@ -10,10 +10,10 @@ import Collapse from "@material-ui/core/Collapse"
 import Avatar from "@material-ui/core/Avatar"
 import IconButton from "@material-ui/core/IconButton"
 import Typography from "@material-ui/core/Typography"
-import {red} from "@material-ui/core/colors"
 import FavoriteIcon from "@material-ui/icons/Favorite"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
-import MoreVertIcon from "@material-ui/icons/MoreVert"
+import {RecipeDetails} from "src/generated/graphql"
+import {dateFormat} from "@/utils/dates"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,12 +35,17 @@ const useStyles = makeStyles((theme: Theme) =>
       transform: "rotate(180deg)",
     },
     avatar: {
-      backgroundColor: red[500],
+      backgroundColor: theme.palette.secondary.main,
     },
   }),
 )
 
-export default function RecipeReviewCard() {
+interface Props {
+  recipe: Pick<RecipeDetails, "id" | "name" | "description" | "createdAt" | "image">
+}
+
+const RecipeReviewCard: FunctionComponent<Props> = ({recipe}) => {
+  console.log({recipe})
   const classes = useStyles()
   const [expanded, setExpanded] = React.useState(false)
 
@@ -56,23 +61,17 @@ export default function RecipeReviewCard() {
             JB
           </Avatar>
         }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-        title="Shrimp and Chorizo Paella"
-        subheader="September 14, 2016"
+        title={recipe.name}
+        subheader={dateFormat(recipe.createdAt, "dd LLL, yyyy")}
       />
       <CardMedia
         className={classes.media}
-        image="/static/images/cards/paella.jpg"
-        title="Paella dish"
+        image={recipe.image != "" ? recipe.image : "/images/recipe-placeholder.png"}
+        title={recipe.name}
       />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-          This impressive paella is a perfect party dish and a fun meal to cook together with your
-          guests. Add 1 cup of frozen peas along with the mussels, if you like.
+          {recipe.description}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
@@ -120,3 +119,5 @@ export default function RecipeReviewCard() {
     </Card>
   )
 }
+
+export default RecipeReviewCard

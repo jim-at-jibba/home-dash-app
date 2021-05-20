@@ -114,7 +114,7 @@ export type RecipeDetails = {
   course: Scalars["String"]
   category: Scalars["String"]
   description: Scalars["String"]
-  image?: Maybe<Scalars["String"]>
+  image: Scalars["String"]
   cookTime: Scalars["Float"]
   prepTime: Scalars["Float"]
   serves: Scalars["Float"]
@@ -131,7 +131,7 @@ export type RecipeFull = {
   description: Scalars["String"]
   ingredients: Array<RecipeIngredients>
   steps: Array<RecipeSteps>
-  image?: Maybe<Scalars["String"]>
+  image: Scalars["String"]
   cookTime: Scalars["Float"]
   prepTime: Scalars["Float"]
   serves: Scalars["Float"]
@@ -258,6 +258,17 @@ export type GetLatestMessageByTopicQuery = {__typename?: "Query"} & {
     | ({__typename?: "TemperatureMessage"} & Pick<TemperatureMessage, "id"> & {
           message: {__typename?: "Temperature"} & Pick<Temperature, "temperature" | "humidity">
         })
+}
+
+export type GetRecipesQueryVariables = Exact<{[key: string]: never}>
+
+export type GetRecipesQuery = {__typename?: "Query"} & {
+  getRecipes: Array<
+    {__typename?: "RecipeDetails"} & Pick<
+      RecipeDetails,
+      "id" | "name" | "description" | "createdAt" | "image"
+    >
+  >
 }
 
 export const GetLatestTempHumidityDocument = gql`
@@ -524,6 +535,48 @@ export type GetLatestMessageByTopicQueryResult = Apollo.QueryResult<
   GetLatestMessageByTopicQuery,
   GetLatestMessageByTopicQueryVariables
 >
+export const GetRecipesDocument = gql`
+  query GetRecipes {
+    getRecipes {
+      id
+      name
+      description
+      createdAt
+      image
+    }
+  }
+`
+
+/**
+ * __useGetRecipesQuery__
+ *
+ * To run a query within a React component, call `useGetRecipesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRecipesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRecipesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetRecipesQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetRecipesQuery, GetRecipesQueryVariables>,
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<GetRecipesQuery, GetRecipesQueryVariables>(GetRecipesDocument, options)
+}
+export function useGetRecipesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetRecipesQuery, GetRecipesQueryVariables>,
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<GetRecipesQuery, GetRecipesQueryVariables>(GetRecipesDocument, options)
+}
+export type GetRecipesQueryHookResult = ReturnType<typeof useGetRecipesQuery>
+export type GetRecipesLazyQueryHookResult = ReturnType<typeof useGetRecipesLazyQuery>
+export type GetRecipesQueryResult = Apollo.QueryResult<GetRecipesQuery, GetRecipesQueryVariables>
 
 export interface PossibleTypesResultData {
   possibleTypes: {
