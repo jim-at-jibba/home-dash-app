@@ -38,7 +38,7 @@ const DashboardCard: FunctionComponent<Props> = ({title, loading, error, childre
 const useStyles = makeStyles((theme: Theme) => ({
   paperRoot: {
     width: "100%",
-    maxWidth: 600,
+    // maxWidth: 600,
     display: "flex",
     flexDirection: "column",
     padding: theme.spacing(2),
