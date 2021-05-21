@@ -10,7 +10,7 @@ import React, {FunctionComponent} from "react"
 import DashboardCard from "@/components/Paper"
 import * as yup from "yup"
 import {useFormik} from "formik"
-import {useCreateFoodCategoryMutation} from "src/generated/graphql"
+import {useCreateFoodCourseMutation} from "src/generated/graphql"
 // import {Alert} from "@material-ui/lab"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -28,12 +28,11 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-const RecipeCategoryForm: FunctionComponent = () => {
+const RecipeCourseForm: FunctionComponent = () => {
   const classes = useStyles()
-  const [createCategory] = useCreateFoodCategoryMutation()
-
+  const [createCourse] = useCreateFoodCourseMutation()
   const validationSchema = yup.object({
-    name: yup.string().required("Category name is require."),
+    name: yup.string().required("Course name is require."),
   })
 
   const formik = useFormik<{name: string}>({
@@ -41,7 +40,8 @@ const RecipeCategoryForm: FunctionComponent = () => {
     validationSchema,
     onSubmit: async (values) => {
       console.log({values})
-      createCategory({
+      //await onSubmit(values as {name: string})
+      createCourse({
         variables: {input: {name: values.name}},
         update() {
           console.log("complete")
@@ -53,7 +53,7 @@ const RecipeCategoryForm: FunctionComponent = () => {
 
   return (
     <Content>
-      <DashboardCard title="Create Category">
+      <DashboardCard title="Create Course">
         <form
           onSubmit={formik.handleSubmit}
           noValidate
@@ -91,4 +91,4 @@ const RecipeCategoryForm: FunctionComponent = () => {
     </Content>
   )
 }
-export default RecipeCategoryForm
+export default RecipeCourseForm

@@ -2,6 +2,8 @@ import Content from "@/components/Content"
 import {createStyles, makeStyles, Theme} from "@material-ui/core"
 import {FunctionComponent} from "react"
 import RecipeCategoryForm from "./components/create-food-category-form"
+import RecipeCourseForm from "./components/create-food-course-form"
+import Grid from "@material-ui/core/Grid"
 // import {Alert} from "@material-ui/lab"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -24,7 +26,16 @@ const RecipeSettings: FunctionComponent = () => {
   const classes = useStyles()
   return (
     <Content>
-      <RecipeCategoryForm />
+      <Grid container direction="column" spacing={4}>
+        <Grid container item xs={12} spacing={2}>
+          <Grid item xs={6}>
+            <RecipeCategoryForm />
+          </Grid>
+          <Grid item xs={6}>
+            <RecipeCourseForm />
+          </Grid>
+        </Grid>
+      </Grid>
     </Content>
   )
 }
