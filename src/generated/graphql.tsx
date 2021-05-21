@@ -47,6 +47,30 @@ export type EnviroMessage = {
   updatedAt: Scalars["DateTime"]
 }
 
+export type FoodCategories = {
+  __typename?: "FoodCategories"
+  id: Scalars["ID"]
+  name: Scalars["String"]
+  createdAt: Scalars["DateTime"]
+  updatedAt: Scalars["DateTime"]
+}
+
+export type FoodCategoryInput = {
+  name: Scalars["String"]
+}
+
+export type FoodCourseInput = {
+  name: Scalars["String"]
+}
+
+export type FoodCourses = {
+  __typename?: "FoodCourses"
+  id: Scalars["ID"]
+  name: Scalars["String"]
+  createdAt: Scalars["DateTime"]
+  updatedAt: Scalars["DateTime"]
+}
+
 export type GetRecipeByIdInput = {
   id: Scalars["String"]
 }
@@ -75,10 +99,20 @@ export type Mqtt = EnviroMessage | SwitchMessage | TemperatureMessage
 export type Mutation = {
   __typename?: "Mutation"
   createRecipe: RecipeFull
+  createFoodCategory: FoodCategories
+  createFoodCourse: FoodCourses
 }
 
 export type MutationCreateRecipeArgs = {
   input: RecipeInput
+}
+
+export type MutationCreateFoodCategoryArgs = {
+  input: FoodCategoryInput
+}
+
+export type MutationCreateFoodCourseArgs = {
+  input: FoodCourseInput
 }
 
 export type Query = {
@@ -283,6 +317,28 @@ export type GetRecipeStepsQueryVariables = Exact<{
 export type GetRecipeStepsQuery = {__typename?: "Query"} & {
   getRecipeStepsByRecipeId: Array<
     {__typename?: "RecipeSteps"} & Pick<RecipeSteps, "id" | "stepNumber" | "stepDescription">
+  >
+}
+
+export type CreateFoodCourseMutationVariables = Exact<{
+  input: FoodCourseInput
+}>
+
+export type CreateFoodCourseMutation = {__typename?: "Mutation"} & {
+  createFoodCourse: {__typename?: "FoodCourses"} & Pick<
+    FoodCourses,
+    "id" | "name" | "createdAt" | "updatedAt"
+  >
+}
+
+export type CreateFoodCategoryMutationVariables = Exact<{
+  input: FoodCategoryInput
+}>
+
+export type CreateFoodCategoryMutation = {__typename?: "Mutation"} & {
+  createFoodCategory: {__typename?: "FoodCategories"} & Pick<
+    FoodCategories,
+    "id" | "name" | "createdAt" | "updatedAt"
   >
 }
 
@@ -641,6 +697,106 @@ export type GetRecipeStepsLazyQueryHookResult = ReturnType<typeof useGetRecipeSt
 export type GetRecipeStepsQueryResult = Apollo.QueryResult<
   GetRecipeStepsQuery,
   GetRecipeStepsQueryVariables
+>
+export const CreateFoodCourseDocument = gql`
+  mutation CreateFoodCourse($input: FoodCourseInput!) {
+    createFoodCourse(input: $input) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`
+export type CreateFoodCourseMutationFn = Apollo.MutationFunction<
+  CreateFoodCourseMutation,
+  CreateFoodCourseMutationVariables
+>
+
+/**
+ * __useCreateFoodCourseMutation__
+ *
+ * To run a mutation, you first call `useCreateFoodCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateFoodCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createFoodCourseMutation, { data, loading, error }] = useCreateFoodCourseMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateFoodCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateFoodCourseMutation,
+    CreateFoodCourseMutationVariables
+  >,
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useMutation<CreateFoodCourseMutation, CreateFoodCourseMutationVariables>(
+    CreateFoodCourseDocument,
+    options,
+  )
+}
+export type CreateFoodCourseMutationHookResult = ReturnType<typeof useCreateFoodCourseMutation>
+export type CreateFoodCourseMutationResult = Apollo.MutationResult<CreateFoodCourseMutation>
+export type CreateFoodCourseMutationOptions = Apollo.BaseMutationOptions<
+  CreateFoodCourseMutation,
+  CreateFoodCourseMutationVariables
+>
+export const CreateFoodCategoryDocument = gql`
+  mutation CreateFoodCategory($input: FoodCategoryInput!) {
+    createFoodCategory(input: $input) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`
+export type CreateFoodCategoryMutationFn = Apollo.MutationFunction<
+  CreateFoodCategoryMutation,
+  CreateFoodCategoryMutationVariables
+>
+
+/**
+ * __useCreateFoodCategoryMutation__
+ *
+ * To run a mutation, you first call `useCreateFoodCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateFoodCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createFoodCategoryMutation, { data, loading, error }] = useCreateFoodCategoryMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateFoodCategoryMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateFoodCategoryMutation,
+    CreateFoodCategoryMutationVariables
+  >,
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useMutation<CreateFoodCategoryMutation, CreateFoodCategoryMutationVariables>(
+    CreateFoodCategoryDocument,
+    options,
+  )
+}
+export type CreateFoodCategoryMutationHookResult = ReturnType<typeof useCreateFoodCategoryMutation>
+export type CreateFoodCategoryMutationResult = Apollo.MutationResult<CreateFoodCategoryMutation>
+export type CreateFoodCategoryMutationOptions = Apollo.BaseMutationOptions<
+  CreateFoodCategoryMutation,
+  CreateFoodCategoryMutationVariables
 >
 
 export interface PossibleTypesResultData {

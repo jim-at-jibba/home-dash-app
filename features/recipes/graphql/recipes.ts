@@ -21,3 +21,25 @@ export const GET_RECIPE_STEPS = gql`
     }
   }
 `
+
+export const CREATE_FOOD_COURSE = gql`
+  mutation CreateFoodCourse($input: FoodCourseInput!) {
+    createFoodCourse(input: $input) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+export const CREATE_FOOD_CATEGORY = gql`
+  mutation CreateFoodCategory($input: FoodCategoryInput!) {
+    createFoodCategory(input: $input) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`
