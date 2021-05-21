@@ -1,8 +1,8 @@
 import Content from "@/components/Content"
 import {createStyles, makeStyles, Theme} from "@material-ui/core"
 import {FunctionComponent} from "react"
-import RecipeCategoryForm from "./components/create-food-category-form"
-import RecipeCourseForm from "./components/create-food-course-form"
+import RecipeCategoryForm from "./components/CreateFoodCategoryForm"
+import RecipeCourseForm from "./components/CreateFoodCourseForm"
 import Grid from "@material-ui/core/Grid"
 // import {Alert} from "@material-ui/lab"
 

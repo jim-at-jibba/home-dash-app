@@ -1,5 +1,5 @@
 import Content from "@/components/Content"
-import RecipeReviewCard from "@/features/recipes/components/recipe-card"
+import RecipeReviewCard from "@/features/recipes/components/RecipeCard"
 import {createStyles, Grid, makeStyles, Theme} from "@material-ui/core"
 import {FunctionComponent} from "react"
 import {useGetRecipesQuery} from "src/generated/graphql"
