@@ -89,6 +89,7 @@ export type Query = {
   getLastXDaysMessage: Array<Mqtt>
   getRecipeById: RecipeFull
   getRecipes: Array<RecipeDetails>
+  getRecipeStepsByRecipeId: Array<RecipeSteps>
 }
 
 export type QueryGetLatestMessageArgs = {
@@ -104,6 +105,10 @@ export type QueryGetLastXDaysMessageArgs = {
 }
 
 export type QueryGetRecipeByIdArgs = {
+  input: GetRecipeByIdInput
+}
+
+export type QueryGetRecipeStepsByRecipeIdArgs = {
   input: GetRecipeByIdInput
 }
 
@@ -268,6 +273,16 @@ export type GetRecipesQuery = {__typename?: "Query"} & {
       RecipeDetails,
       "id" | "name" | "description" | "createdAt" | "image"
     >
+  >
+}
+
+export type GetRecipeStepsQueryVariables = Exact<{
+  input: GetRecipeByIdInput
+}>
+
+export type GetRecipeStepsQuery = {__typename?: "Query"} & {
+  getRecipeStepsByRecipeId: Array<
+    {__typename?: "RecipeSteps"} & Pick<RecipeSteps, "id" | "stepNumber" | "stepDescription">
   >
 }
 
@@ -577,6 +592,56 @@ export function useGetRecipesLazyQuery(
 export type GetRecipesQueryHookResult = ReturnType<typeof useGetRecipesQuery>
 export type GetRecipesLazyQueryHookResult = ReturnType<typeof useGetRecipesLazyQuery>
 export type GetRecipesQueryResult = Apollo.QueryResult<GetRecipesQuery, GetRecipesQueryVariables>
+export const GetRecipeStepsDocument = gql`
+  query GetRecipeSteps($input: GetRecipeByIdInput!) {
+    getRecipeStepsByRecipeId(input: $input) {
+      id
+      stepNumber
+      stepDescription
+    }
+  }
+`
+
+/**
+ * __useGetRecipeStepsQuery__
+ *
+ * To run a query within a React component, call `useGetRecipeStepsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRecipeStepsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRecipeStepsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetRecipeStepsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetRecipeStepsQuery, GetRecipeStepsQueryVariables>,
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<GetRecipeStepsQuery, GetRecipeStepsQueryVariables>(
+    GetRecipeStepsDocument,
+    options,
+  )
+}
+export function useGetRecipeStepsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetRecipeStepsQuery, GetRecipeStepsQueryVariables>,
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<GetRecipeStepsQuery, GetRecipeStepsQueryVariables>(
+    GetRecipeStepsDocument,
+    options,
+  )
+}
+export type GetRecipeStepsQueryHookResult = ReturnType<typeof useGetRecipeStepsQuery>
+export type GetRecipeStepsLazyQueryHookResult = ReturnType<typeof useGetRecipeStepsLazyQuery>
+export type GetRecipeStepsQueryResult = Apollo.QueryResult<
+  GetRecipeStepsQuery,
+  GetRecipeStepsQueryVariables
+>
 
 export interface PossibleTypesResultData {
   possibleTypes: {
