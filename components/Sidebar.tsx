@@ -17,6 +17,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft"
 import ChevronRightIcon from "@material-ui/icons/ChevronRight"
 import ImportantDevicesIcon from "@material-ui/icons/ImportantDevices"
 import LocalFloristIcon from "@material-ui/icons/LocalFlorist"
+import SettingsIcon from "@material-ui/icons/Settings"
 
 interface Props {
   open: boolean
@@ -97,6 +98,9 @@ const Sidebar: FunctionComponent<Props> = ({open, handleDrawerClose}) => {
           </MenuItemNext>
           <MenuItemNext path="/recipes/add" label="New recipe">
             <AddBoxIcon />
+          </MenuItemNext>
+          <MenuItemNext path="/recipes/settings" label="Recipe settings">
+            <SettingsIcon />
           </MenuItemNext>
         </List>
       </Box>

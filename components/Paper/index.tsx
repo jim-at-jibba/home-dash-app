@@ -8,9 +8,9 @@ import {Alert} from "@material-ui/lab"
 interface Props {
   title: string
   error?: boolean
-  loading: boolean
+  loading?: boolean
 }
-const DashboardCard: FunctionComponent<Props> = ({title, loading, error, children}) => {
+const DashboardCard: FunctionComponent<Props> = ({title, loading = false, error, children}) => {
   const classes = useStyles()
 
   if (error) {
