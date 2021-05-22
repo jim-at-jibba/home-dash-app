@@ -27,7 +27,7 @@ import {Input} from "@/components/formCotrols/input"
 import {CategorySelect} from "./components/CategorySelect"
 import {CourseSelect} from "./components/CourseSelect"
 import {Alert} from "@material-ui/lab"
-import {useCreateImageSignatureMutation} from "src/generated/graphql"
+import {useCreateImageSignatureMutation, useCreateRecipeMutation} from "src/generated/graphql"
 // import {Alert} from "@material-ui/lab"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -77,7 +77,7 @@ interface RecipeFormValues {
   cookTime: number
   prepTime: number
   serves: number
-  recipeImage: string | null
+  recipeImage: string
 }
 
 interface IUploadImageResponse {
@@ -120,6 +120,7 @@ const CreateRecipeForm: FunctionComponent = () => {
   const [previewImage, setPreviewImage] = React.useState<string>()
 
   const [createImageSignature] = useCreateImageSignatureMutation()
+  const [createRecipe] = useCreateRecipeMutation()
 
   const validationSchema = yup.object({
     name: yup.string().min(1, "Must be longer that 1 char").required("Recipe name is require."),
@@ -225,7 +226,7 @@ const CreateRecipeForm: FunctionComponent = () => {
           cookTime: 0,
           prepTime: 0,
           serves: 1,
-          recipeImage: null,
+          recipeImage: "",
         }}
         validationSchema={validationSchema}
         onSubmit={async (values, actions) => {
@@ -233,6 +234,23 @@ const CreateRecipeForm: FunctionComponent = () => {
 
           try {
             console.log({values})
+            await createRecipe({
+              variables: {
+                input: {
+                  // name: values.name,
+                  // courseId: values.courseId,
+                  // categoryId: values.categoryId,
+                  // description: values.description,
+                  // recipeImage: values.recipeImage,
+                  // cookTime: values.cookTime,
+                  // prepTime: values.prepTime,
+                  // serves: val,
+                  // steps: [{stepNumber: 1, stepDescription: "Cut shit up"}],
+                  // ingredients: [{ingredient: "50g carrots"}],
+                  ...values,
+                },
+              },
+            })
           } catch (err) {
             console.log(err)
             actions.setSubmitting(false)
