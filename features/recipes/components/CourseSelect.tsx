@@ -36,7 +36,7 @@ export const CourseSelect = (): JSX.Element => {
 
   const {getFoodCourses: courses} = data
   return (
-    <>
+    <Box display="flex" flexDirection="column">
       {meta.touched && meta.error ? (
         <Box mb={2}>
           <Alert severity="error">{meta.error}</Alert>
@@ -56,7 +56,7 @@ export const CourseSelect = (): JSX.Element => {
           ))}
         </Select>
       </FormControl>
-    </>
+    </Box>
   )
 }
 

@@ -37,7 +37,7 @@ export const CategorySelect = (): JSX.Element => {
   const {getFoodCategory: categories} = data
 
   return (
-    <>
+    <Box display="flex" flexDirection="column">
       {meta.touched && meta.error ? (
         <Box mb={2}>
           <Alert severity="error">{meta.error}</Alert>
@@ -57,7 +57,7 @@ export const CategorySelect = (): JSX.Element => {
           ))}
         </Select>
       </FormControl>
-    </>
+    </Box>
   )
 }
 
