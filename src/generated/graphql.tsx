@@ -75,6 +75,12 @@ export type GetRecipeByIdInput = {
   id: Scalars["String"]
 }
 
+export type ImageSignature = {
+  __typename?: "ImageSignature"
+  signature: Scalars["String"]
+  timestamp: Scalars["Int"]
+}
+
 export type IngredientsInput = {
   ingredient: Scalars["String"]
 }
@@ -101,6 +107,7 @@ export type Mutation = {
   createRecipe: RecipeFull
   createFoodCategory: FoodCategories
   createFoodCourse: FoodCourses
+  createImageSignature: ImageSignature
 }
 
 export type MutationCreateRecipeArgs = {
@@ -339,6 +346,15 @@ export type CreateFoodCategoryMutation = {__typename?: "Mutation"} & {
   createFoodCategory: {__typename?: "FoodCategories"} & Pick<
     FoodCategories,
     "id" | "name" | "createdAt" | "updatedAt"
+  >
+}
+
+export type CreateImageSignatureMutationVariables = Exact<{[key: string]: never}>
+
+export type CreateImageSignatureMutation = {__typename?: "Mutation"} & {
+  createImageSignature: {__typename?: "ImageSignature"} & Pick<
+    ImageSignature,
+    "signature" | "timestamp"
   >
 }
 
@@ -797,6 +813,55 @@ export type CreateFoodCategoryMutationResult = Apollo.MutationResult<CreateFoodC
 export type CreateFoodCategoryMutationOptions = Apollo.BaseMutationOptions<
   CreateFoodCategoryMutation,
   CreateFoodCategoryMutationVariables
+>
+export const CreateImageSignatureDocument = gql`
+  mutation CreateImageSignature {
+    createImageSignature {
+      signature
+      timestamp
+    }
+  }
+`
+export type CreateImageSignatureMutationFn = Apollo.MutationFunction<
+  CreateImageSignatureMutation,
+  CreateImageSignatureMutationVariables
+>
+
+/**
+ * __useCreateImageSignatureMutation__
+ *
+ * To run a mutation, you first call `useCreateImageSignatureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateImageSignatureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createImageSignatureMutation, { data, loading, error }] = useCreateImageSignatureMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCreateImageSignatureMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateImageSignatureMutation,
+    CreateImageSignatureMutationVariables
+  >,
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useMutation<CreateImageSignatureMutation, CreateImageSignatureMutationVariables>(
+    CreateImageSignatureDocument,
+    options,
+  )
+}
+export type CreateImageSignatureMutationHookResult = ReturnType<
+  typeof useCreateImageSignatureMutation
+>
+export type CreateImageSignatureMutationResult = Apollo.MutationResult<CreateImageSignatureMutation>
+export type CreateImageSignatureMutationOptions = Apollo.BaseMutationOptions<
+  CreateImageSignatureMutation,
+  CreateImageSignatureMutationVariables
 >
 
 export interface PossibleTypesResultData {

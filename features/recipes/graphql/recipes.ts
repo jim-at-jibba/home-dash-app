@@ -43,3 +43,12 @@ export const CREATE_FOOD_CATEGORY = gql`
     }
   }
 `
+
+export const CREATE_IMAGE_SIGNATURE = gql`
+  mutation CreateImageSignature {
+    createImageSignature {
+      signature
+      timestamp
+    }
+  }
+`
