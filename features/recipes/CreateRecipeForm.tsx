@@ -15,16 +15,19 @@ import {
 import Box from "@material-ui/core/Box"
 import Button from "@material-ui/core/Button"
 import SaveIcon from "@material-ui/icons/Save"
+import PermMediaIcon from "@material-ui/icons/PermMedia"
 import AddIcon from "@material-ui/icons/Add"
 import React, {FunctionComponent} from "react"
 import DashboardCard from "@/components/Paper"
 import CancelIcon from "@material-ui/icons/Cancel"
+import DeleteIcon from "@material-ui/icons/Delete"
 import * as yup from "yup"
 import {Form, Formik, FormikProps} from "formik"
 import {Input} from "@/components/formCotrols/input"
 import {CategorySelect} from "./components/CategorySelect"
 import {CourseSelect} from "./components/CourseSelect"
 import {Alert} from "@material-ui/lab"
+import {useCreateImageSignatureMutation} from "src/generated/graphql"
 // import {Alert} from "@material-ui/lab"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -47,6 +50,20 @@ const useStyles = makeStyles((theme: Theme) =>
         marginLeft: 0,
       },
     },
+    imageUploader: {
+      width: "100%",
+      height: "200px",
+      border: `2px dashed ${theme.palette.secondary.main}`,
+      borderRadius: theme.shape.borderRadius,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    previewImage: {
+      objectFit: "cover",
+      width: "100%",
+      height: "auto",
+    },
   }),
 )
 
@@ -60,7 +77,35 @@ interface RecipeFormValues {
   cookTime: number
   prepTime: number
   serves: number
-  recipeImage: string
+  recipeImage: string | null
+}
+
+interface IUploadImageResponse {
+  secure_url: string
+}
+
+async function uploadImage(
+  image: File,
+  signature: string,
+  timestamp: number,
+): Promise<IUploadImageResponse> {
+  console.log(process.env.NEXT_PUBLIC_CLOUDINARY_KEY, signature, timestamp)
+  const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`
+
+  const formData = new FormData()
+  formData.append("file", image)
+  formData.append("signature", signature)
+  formData.append("timestamp", timestamp.toString())
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  formData.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_KEY)
+
+  const reponse = await fetch(url, {
+    method: "post",
+    body: formData,
+  })
+
+  return reponse.json()
 }
 
 const CreateRecipeForm: FunctionComponent = () => {
@@ -72,6 +117,9 @@ const CreateRecipeForm: FunctionComponent = () => {
   const [stepsList, setStepsList] = React.useState<
     Array<{stepNumber: number; stepDescription: string}>
   >([{stepNumber: 0, stepDescription: ""}])
+  const [previewImage, setPreviewImage] = React.useState<string>()
+
+  const [createImageSignature] = useCreateImageSignatureMutation()
 
   const validationSchema = yup.object({
     name: yup.string().min(1, "Must be longer that 1 char").required("Recipe name is require."),
@@ -89,7 +137,7 @@ const CreateRecipeForm: FunctionComponent = () => {
       .array()
       .of(
         yup.object().shape({
-          ingredient: yup.string().max(255).required(),
+          ingredient: yup.string().min(1).max(255).required(),
         }),
       )
       .min(1, "There must be at least 1 ingredient"),
@@ -98,14 +146,11 @@ const CreateRecipeForm: FunctionComponent = () => {
       .of(
         yup.object().shape({
           stepNumber: yup.number().required(),
-          stepDescription: yup.string().required(),
+          stepDescription: yup.string().min(1).required(),
         }),
       )
       .min(1, "There must be at least 1 step"),
-    recipeImage: yup
-      .string()
-      .min(1, "Must be longer that 1 char")
-      .required("Recipe name is require."),
+    recipeImage: yup.mixed().required("Recipe image is require."),
   })
 
   React.useEffect(() => {
@@ -180,7 +225,7 @@ const CreateRecipeForm: FunctionComponent = () => {
           cookTime: 0,
           prepTime: 0,
           serves: 1,
-          recipeImage: "",
+          recipeImage: null,
         }}
         validationSchema={validationSchema}
         onSubmit={async (values, actions) => {
@@ -200,7 +245,65 @@ const CreateRecipeForm: FunctionComponent = () => {
               <Grid container item xs={12} spacing={2}>
                 <Grid item xs={4}>
                   <DashboardCard title="Recipe Image">
-                    <p>Image</p>
+                    <Box width="100%">
+                      {!previewImage && (
+                        <label htmlFor="image">
+                          <Box width="75%" height="200px" className={classes.imageUploader}>
+                            <Box display="flex" flexDirection="column" alignItems="center">
+                              Click to add image (16:9)
+                              <Box mt={2}>
+                                <PermMediaIcon fontSize="large" />
+                              </Box>
+                            </Box>
+                          </Box>
+                        </label>
+                      )}
+                      <input
+                        id="image"
+                        name="image"
+                        type="file"
+                        accept="image/*"
+                        style={{display: "none"}}
+                        onChange={async (event: React.ChangeEvent<HTMLInputElement>) => {
+                          if (event?.target?.files?.[0]) {
+                            const file = event.target.files[0]
+                            const {data: imageSignatureData} = await createImageSignature()
+
+                            if (imageSignatureData) {
+                              const {signature, timestamp} = imageSignatureData.createImageSignature
+                              console.log(signature, timestamp)
+                              const imageResult = await uploadImage(file, signature, timestamp)
+                              const imageUrl = imageResult.secure_url
+
+                              props.setFieldValue("recipeImage", imageUrl, false)
+                              setPreviewImage(imageUrl)
+                            }
+                          }
+                        }}
+                      />
+                      {props.touched.recipeImage && props.errors.recipeImage ? (
+                        <Box mb={2} mt={2}>
+                          <Alert severity="error">{props.errors.recipeImage}</Alert>
+                        </Box>
+                      ) : null}
+                      {previewImage && (
+                        <Box display="flex" flexDirection="column" alignItems="center">
+                          <img alt="What" src={previewImage} className={classes.previewImage} />
+                          <Box mt={1}>
+                            <IconButton
+                              aria-label="delete"
+                              color="secondary"
+                              onClick={() => {
+                                props.setFieldValue("recipeImage", "", false)
+                                setPreviewImage("")
+                              }}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Box>
+                        </Box>
+                      )}
+                    </Box>
                   </DashboardCard>
                 </Grid>
                 <Grid item xs={8}>
