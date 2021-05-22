@@ -16,7 +16,7 @@ import React from "react"
 
 export const CategorySelect = (): JSX.Element => {
   const classes = useStyles()
-  const [field, meta] = useField("category")
+  const [field, meta] = useField("categoryId")
 
   //const {data, loading, error} = useQuery<GetAvailableCategories>(GET_CATEGORIES)
 
@@ -44,12 +44,15 @@ export const CategorySelect = (): JSX.Element => {
       <FormControl className={classes.root} variant="filled" error={meta.touched && !!meta.error}>
         <InputLabel>Category</InputLabel>
 
-        <Select {...field} name="category">
+        <Select {...field} name="categoryId">
           {/* {categories.map((item) => (
             <MenuItem key={item.id} value={item.id}>
               {item.name}
             </MenuItem>
           ))} */}
+          <MenuItem key="emplty" value="">
+            No selection
+          </MenuItem>
           <MenuItem key="vegan" value="vegan">
             Vegan
           </MenuItem>
