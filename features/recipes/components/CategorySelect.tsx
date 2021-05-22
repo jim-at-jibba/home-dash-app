@@ -9,30 +9,32 @@ import {
   Select,
   // CircularProgress,
   Box,
+  CircularProgress,
 } from "@material-ui/core"
 import Alert from "@material-ui/lab/Alert"
 import {useField} from "formik"
 import React from "react"
+import {useGetFoodCategoriesQuery} from "src/generated/graphql"
 
 export const CategorySelect = (): JSX.Element => {
   const classes = useStyles()
   const [field, meta] = useField("categoryId")
 
-  //const {data, loading, error} = useQuery<GetAvailableCategories>(GET_CATEGORIES)
+  const {data, loading, error} = useGetFoodCategoriesQuery()
 
-  // if (data == null || data.availableClassifiedsCategories == null || loading) {
-  //   return (
-  //     <div className={classes.loading}>
-  //       <CircularProgress />
-  //     </div>
-  //   )
-  // }
+  if (data == null || data.getFoodCategory == null || loading) {
+    return (
+      <div className={classes.loading}>
+        <CircularProgress />
+      </div>
+    )
+  }
 
-  // if (error) {
-  //   console.log("There was an error fetching available categories", error)
-  // }
+  if (error) {
+    console.log("There was an error fetching available categories", error)
+  }
 
-  // const {availableClassifiedsCategories: categories} = data
+  const {getFoodCategory: categories} = data
 
   return (
     <>
@@ -45,17 +47,14 @@ export const CategorySelect = (): JSX.Element => {
         <InputLabel>Category</InputLabel>
 
         <Select {...field} name="categoryId">
-          {/* {categories.map((item) => (
-            <MenuItem key={item.id} value={item.id}>
-              {item.name}
-            </MenuItem>
-          ))} */}
           <MenuItem key="emplty" value="">
             No selection
           </MenuItem>
-          <MenuItem key="vegan" value="vegan">
-            Vegan
-          </MenuItem>
+          {categories.map((item) => (
+            <MenuItem key={item.id} value={item.id} className={classes.text}>
+              {item.name}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
     </>
@@ -71,6 +70,9 @@ const useStyles = makeStyles(() =>
     loading: {
       display: "flex",
       justifyContent: "center",
+    },
+    text: {
+      textTransform: "capitalize",
     },
   }),
 )

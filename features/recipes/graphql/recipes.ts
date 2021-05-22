@@ -52,3 +52,14 @@ export const CREATE_IMAGE_SIGNATURE = gql`
     }
   }
 `
+
+export const GET_FOOD_CATEGORIES = gql`
+  query GetFoodCategories {
+    getFoodCategory {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`
