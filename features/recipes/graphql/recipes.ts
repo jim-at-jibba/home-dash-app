@@ -63,3 +63,13 @@ export const GET_FOOD_CATEGORIES = gql`
     }
   }
 `
+export const GET_FOOD_COURSES = gql`
+  query GetFoodCourses {
+    getFoodCourses {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`
