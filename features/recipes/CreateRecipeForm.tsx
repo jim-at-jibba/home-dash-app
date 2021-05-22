@@ -75,6 +75,37 @@ const CreateRecipeForm: FunctionComponent = () => {
 
   const validationSchema = yup.object({
     name: yup.string().min(1, "Must be longer that 1 char").required("Recipe name is require."),
+    categoryId: yup
+      .string()
+      .min(1, "Must be longer that 1 char")
+      .required("A category is require."),
+    courseId: yup.string().min(1, "Must be longer that 1 char").required("A course is require."),
+    description: yup
+      .string()
+      .min(1, "Must be longer that 1 char")
+      .max(5000, "Maximum of 5000 characters")
+      .required("Recipe descrition is require."),
+    ingredients: yup
+      .array()
+      .of(
+        yup.object().shape({
+          ingredient: yup.string().max(255).required(),
+        }),
+      )
+      .min(1, "There must be at least 1 ingredient"),
+    steps: yup
+      .array()
+      .of(
+        yup.object().shape({
+          stepNumber: yup.number().required(),
+          stepDescription: yup.string().required(),
+        }),
+      )
+      .min(1, "There must be at least 1 step"),
+    recipeImage: yup
+      .string()
+      .min(1, "Must be longer that 1 char")
+      .required("Recipe name is require."),
   })
 
   React.useEffect(() => {
@@ -84,18 +115,24 @@ const CreateRecipeForm: FunctionComponent = () => {
   const handleIngredientInputChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
     index: number,
+    formikProps: FormikProps<RecipeFormValues>,
   ) => {
     const {value} = e.target
     const list = [...ingredientsList]
     list[index]["ingredient"] = value
     setIngredientsList(list)
+    formikProps.setFieldValue("ingredients", list, false)
   }
 
   // handle click event of the Remove button
-  const handleIngredientRemoveClick = (index: number) => {
+  const handleIngredientRemoveClick = (
+    index: number,
+    formikProps: FormikProps<RecipeFormValues>,
+  ) => {
     const list = [...ingredientsList]
     list.splice(index, 1)
     setIngredientsList(list)
+    formikProps.setFieldValue("ingredients", list, false)
   }
 
   // handle click event of the Add button
@@ -106,6 +143,7 @@ const CreateRecipeForm: FunctionComponent = () => {
   const handleStepsInputChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
     index: number,
+    formikProps: FormikProps<RecipeFormValues>,
   ) => {
     const {value} = e.target
     const list = [...stepsList]
@@ -113,13 +151,15 @@ const CreateRecipeForm: FunctionComponent = () => {
     list[index]["stepDescription"] = value
     list[index]["stepNumber"] = index + 1
     setStepsList(list)
+    formikProps.setFieldValue("steps", list, false)
   }
 
   // handle click event of the Remove button
-  const handleStepsRemoveClick = (index: number) => {
+  const handleStepsRemoveClick = (index: number, formikProps: FormikProps<RecipeFormValues>) => {
     const list = [...stepsList]
     list.splice(index, 1)
     setStepsList(list)
+    formikProps.setFieldValue("steps", list, false)
   }
 
   // handle click event of the Add button
@@ -139,7 +179,7 @@ const CreateRecipeForm: FunctionComponent = () => {
           steps: [],
           cookTime: 0,
           prepTime: 0,
-          serves: 0,
+          serves: 1,
           recipeImage: "",
         }}
         validationSchema={validationSchema}
@@ -167,7 +207,7 @@ const CreateRecipeForm: FunctionComponent = () => {
                   <DashboardCard title="Recipe Details">
                     <Box display="flex" flex={1} flexDirection="column">
                       <Box display="flex" flex={1} mb={2}>
-                        <Input {...props} name="name" inputLabel="Recipe name" myVariant="filled" />
+                        <Input name="name" inputLabel="Recipe name" myVariant="filled" />
                       </Box>
                       <Box display="flex" flex={2} flexDirection="row" mb={2}>
                         <Box display="flex" flex={1} mr={2}>
@@ -179,7 +219,6 @@ const CreateRecipeForm: FunctionComponent = () => {
                       </Box>
                       <Box display="flex" flex={1} mb={2}>
                         <Input
-                          {...props}
                           multiline
                           rows={4}
                           name="description"
@@ -190,7 +229,6 @@ const CreateRecipeForm: FunctionComponent = () => {
                       <Box display="flex" flex={3} flexDirection="row" mb={2}>
                         <Box display="flex" flex={1} mr={2}>
                           <Input
-                            {...props}
                             name="cookTime"
                             inputLabel="Cook time"
                             type="number"
@@ -199,7 +237,6 @@ const CreateRecipeForm: FunctionComponent = () => {
                         </Box>
                         <Box display="flex" flex={1} mr={2}>
                           <Input
-                            {...props}
                             name="prepTime"
                             inputLabel="Prep time"
                             type="number"
@@ -220,7 +257,11 @@ const CreateRecipeForm: FunctionComponent = () => {
                             >
                               <InputLabel>Serves</InputLabel>
 
-                              <Select name="serves">
+                              <Select
+                                name="serves"
+                                value={props.values.serves}
+                                onChange={props.handleChange}
+                              >
                                 {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
                                   <MenuItem key={item} value={item}>
                                     {item}
@@ -248,13 +289,13 @@ const CreateRecipeForm: FunctionComponent = () => {
                               name="ingredient"
                               variant="filled"
                               value={ingredient.ingredient}
-                              onChange={(e) => handleIngredientInputChange(e, i)}
+                              onChange={(e) => handleIngredientInputChange(e, i, props)}
                               InputProps={{
                                 endAdornment: (
                                   <InputAdornment position="end">
                                     <IconButton
                                       aria-label="remove-ingredient"
-                                      onClick={() => handleIngredientRemoveClick(i)}
+                                      onClick={() => handleIngredientRemoveClick(i, props)}
                                       edge="end"
                                     >
                                       <CancelIcon />
@@ -274,7 +315,6 @@ const CreateRecipeForm: FunctionComponent = () => {
                           color="primary"
                           size="small"
                           startIcon={<AddIcon />}
-                          type="submit"
                           className={classes.button}
                         >
                           Add
@@ -297,13 +337,13 @@ const CreateRecipeForm: FunctionComponent = () => {
                               multiline
                               rows={2}
                               value={step.stepDescription}
-                              onChange={(e) => handleStepsInputChange(e, i)}
+                              onChange={(e) => handleStepsInputChange(e, i, props)}
                               InputProps={{
                                 endAdornment: (
                                   <InputAdornment position="end">
                                     <IconButton
                                       aria-label="remove-ingredient"
-                                      onClick={() => handleStepsRemoveClick(i)}
+                                      onClick={() => handleStepsRemoveClick(i, props)}
                                       edge="end"
                                     >
                                       <CancelIcon />
@@ -323,7 +363,6 @@ const CreateRecipeForm: FunctionComponent = () => {
                           color="primary"
                           size="small"
                           startIcon={<AddIcon />}
-                          type="submit"
                           className={classes.button}
                         >
                           Add
