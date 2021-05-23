@@ -6,7 +6,7 @@ import React, {FunctionComponent} from "react"
 import {Alert} from "@material-ui/lab"
 
 interface Props {
-  title: string
+  title?: string
   error?: boolean
   loading?: boolean
 }

@@ -19,7 +19,7 @@ import {LinearProgress} from "@material-ui/core"
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      maxWidth: 345,
+      width: 345,
     },
     media: {
       height: 0,
