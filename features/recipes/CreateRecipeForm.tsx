@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface RecipeFormValues {
   name: string
-  categoryId: string
+  categoryIds: Array<string>
   courseId: string
   description: string
   ingredients: Array<{ingredient: string}>
@@ -124,10 +124,7 @@ const CreateRecipeForm: FunctionComponent = () => {
 
   const validationSchema = yup.object({
     name: yup.string().min(1, "Must be longer that 1 char").required("Recipe name is require."),
-    categoryId: yup
-      .string()
-      .min(1, "Must be longer that 1 char")
-      .required("A category is require."),
+    categoryIds: yup.array().of(yup.string()).min(1, "There must be at least one category"),
     courseId: yup.string().min(1, "Must be longer that 1 char").required("A course is require."),
     description: yup
       .string()
@@ -218,7 +215,7 @@ const CreateRecipeForm: FunctionComponent = () => {
       <Formik<RecipeFormValues>
         initialValues={{
           name: "",
-          categoryId: "",
+          categoryIds: [],
           courseId: "",
           description: "",
           ingredients: [],
@@ -257,255 +254,261 @@ const CreateRecipeForm: FunctionComponent = () => {
           }
         }}
       >
-        {(props: FormikProps<RecipeFormValues>) => (
-          <Form>
-            <Grid container direction="column" spacing={4}>
-              <Grid container item xs={12} spacing={2}>
-                <Grid item xs={4}>
-                  <DashboardCard title="Recipe Image">
-                    <Box width="100%">
-                      {!previewImage && (
-                        <label htmlFor="image">
-                          <Box width="75%" height="200px" className={classes.imageUploader}>
-                            <Box display="flex" flexDirection="column" alignItems="center">
-                              Click to add image (16:9)
-                              <Box mt={2}>
-                                <PermMediaIcon fontSize="large" />
+        {(props: FormikProps<RecipeFormValues>) => {
+          console.log(props)
+          return (
+            <Form>
+              <Grid container direction="column" spacing={4}>
+                <Grid container item xs={12} spacing={2}>
+                  <Grid item xs={4}>
+                    <DashboardCard title="Recipe Image">
+                      <Box width="100%">
+                        {!previewImage && (
+                          <label htmlFor="image">
+                            <Box width="75%" height="200px" className={classes.imageUploader}>
+                              <Box display="flex" flexDirection="column" alignItems="center">
+                                Click to add image (16:9)
+                                <Box mt={2}>
+                                  <PermMediaIcon fontSize="large" />
+                                </Box>
                               </Box>
                             </Box>
-                          </Box>
-                        </label>
-                      )}
-                      <input
-                        id="image"
-                        name="image"
-                        type="file"
-                        accept="image/*"
-                        style={{display: "none"}}
-                        onChange={async (event: React.ChangeEvent<HTMLInputElement>) => {
-                          if (event?.target?.files?.[0]) {
-                            const file = event.target.files[0]
-                            const {data: imageSignatureData} = await createImageSignature()
+                          </label>
+                        )}
+                        <input
+                          id="image"
+                          name="image"
+                          type="file"
+                          accept="image/*"
+                          style={{display: "none"}}
+                          onChange={async (event: React.ChangeEvent<HTMLInputElement>) => {
+                            if (event?.target?.files?.[0]) {
+                              const file = event.target.files[0]
+                              const {data: imageSignatureData} = await createImageSignature()
 
-                            if (imageSignatureData) {
-                              const {signature, timestamp} = imageSignatureData.createImageSignature
-                              console.log(signature, timestamp)
-                              const imageResult = await uploadImage(file, signature, timestamp)
-                              const imageUrl = imageResult.secure_url
+                              if (imageSignatureData) {
+                                const {
+                                  signature,
+                                  timestamp,
+                                } = imageSignatureData.createImageSignature
+                                console.log(signature, timestamp)
+                                const imageResult = await uploadImage(file, signature, timestamp)
+                                const imageUrl = imageResult.secure_url
 
-                              props.setFieldValue("recipeImage", imageUrl, false)
-                              setPreviewImage(imageUrl)
+                                props.setFieldValue("recipeImage", imageUrl, false)
+                                setPreviewImage(imageUrl)
+                              }
                             }
-                          }
-                        }}
-                      />
-                      {props.touched.recipeImage && props.errors.recipeImage ? (
-                        <Box mb={2} mt={2}>
-                          <Alert severity="error">{props.errors.recipeImage}</Alert>
-                        </Box>
-                      ) : null}
-                      {previewImage && (
-                        <Box display="flex" flexDirection="column" alignItems="center">
-                          <img alt="What" src={previewImage} className={classes.previewImage} />
-                          <Box mt={1}>
-                            <IconButton
-                              aria-label="delete"
-                              color="secondary"
-                              onClick={() => {
-                                props.setFieldValue("recipeImage", "", false)
-                                setPreviewImage("")
-                              }}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </Box>
-                        </Box>
-                      )}
-                    </Box>
-                  </DashboardCard>
-                </Grid>
-                <Grid item xs={8}>
-                  <DashboardCard title="Recipe Details">
-                    <Box display="flex" flex={1} flexDirection="column">
-                      <Box display="flex" flex={1} mb={2}>
-                        <Input name="name" inputLabel="Recipe name" myVariant="filled" />
-                      </Box>
-                      <Box display="flex" flex={2} flexDirection="row" mb={2}>
-                        <Box display="flex" flex={1} mr={2}>
-                          <CategorySelect />
-                        </Box>
-                        <Box display="flex" flex={1}>
-                          <CourseSelect />
-                        </Box>
-                      </Box>
-                      <Box display="flex" flex={1} mb={2}>
-                        <Input
-                          multiline
-                          rows={4}
-                          name="description"
-                          inputLabel="Recipe description"
-                          myVariant="filled"
+                          }}
                         />
-                      </Box>
-                      <Box display="flex" flex={3} flexDirection="row" mb={2}>
-                        <Box display="flex" flex={1} mr={2}>
-                          <Input
-                            name="cookTime"
-                            inputLabel="Cook time"
-                            type="number"
-                            myVariant="filled"
-                          />
-                        </Box>
-                        <Box display="flex" flex={1} mr={2}>
-                          <Input
-                            name="prepTime"
-                            inputLabel="Prep time"
-                            type="number"
-                            myVariant="filled"
-                          />
-                        </Box>
-                        <Box display="flex" flex={1}>
-                          <>
-                            {props.touched.cookTime && props.errors.cookTime ? (
-                              <Box mb={2}>
-                                <Alert severity="error">{props.errors.cookTime}</Alert>
-                              </Box>
-                            ) : null}
-                            <FormControl
-                              style={{width: "100%"}}
-                              variant="filled"
-                              error={props.touched.serves && !!props.errors.serves}
-                            >
-                              <InputLabel>Serves</InputLabel>
-
-                              <Select
-                                name="serves"
-                                value={props.values.serves}
-                                onChange={props.handleChange}
+                        {props.touched.recipeImage && props.errors.recipeImage ? (
+                          <Box mb={2} mt={2}>
+                            <Alert severity="error">{props.errors.recipeImage}</Alert>
+                          </Box>
+                        ) : null}
+                        {previewImage && (
+                          <Box display="flex" flexDirection="column" alignItems="center">
+                            <img alt="What" src={previewImage} className={classes.previewImage} />
+                            <Box mt={1}>
+                              <IconButton
+                                aria-label="delete"
+                                color="secondary"
+                                onClick={() => {
+                                  props.setFieldValue("recipeImage", "", false)
+                                  setPreviewImage("")
+                                }}
                               >
-                                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
-                                  <MenuItem key={item} value={item}>
-                                    {item}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                            </FormControl>
-                          </>
+                                <DeleteIcon />
+                              </IconButton>
+                            </Box>
+                          </Box>
+                        )}
+                      </Box>
+                    </DashboardCard>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <DashboardCard title="Recipe Details">
+                      <Box display="flex" flex={1} flexDirection="column">
+                        <Box display="flex" flex={1} mb={2}>
+                          <Input name="name" inputLabel="Recipe name" myVariant="filled" />
+                        </Box>
+                        <Box display="flex" flex={2} flexDirection="row" mb={2}>
+                          <Box display="flex" flex={1} mr={2}>
+                            <CategorySelect />
+                          </Box>
+                          <Box display="flex" flex={1}>
+                            <CourseSelect />
+                          </Box>
+                        </Box>
+                        <Box display="flex" flex={1} mb={2}>
+                          <Input
+                            multiline
+                            rows={4}
+                            name="description"
+                            inputLabel="Recipe description"
+                            myVariant="filled"
+                          />
+                        </Box>
+                        <Box display="flex" flex={3} flexDirection="row" mb={2}>
+                          <Box display="flex" flex={1} mr={2}>
+                            <Input
+                              name="cookTime"
+                              inputLabel="Cook time"
+                              type="number"
+                              myVariant="filled"
+                            />
+                          </Box>
+                          <Box display="flex" flex={1} mr={2}>
+                            <Input
+                              name="prepTime"
+                              inputLabel="Prep time"
+                              type="number"
+                              myVariant="filled"
+                            />
+                          </Box>
+                          <Box display="flex" flex={1}>
+                            <>
+                              {props.touched.cookTime && props.errors.cookTime ? (
+                                <Box mb={2}>
+                                  <Alert severity="error">{props.errors.cookTime}</Alert>
+                                </Box>
+                              ) : null}
+                              <FormControl
+                                style={{width: "100%"}}
+                                variant="filled"
+                                error={props.touched.serves && !!props.errors.serves}
+                              >
+                                <InputLabel>Serves</InputLabel>
+
+                                <Select
+                                  name="serves"
+                                  value={props.values.serves}
+                                  onChange={props.handleChange}
+                                >
+                                  {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
+                                    <MenuItem key={item} value={item}>
+                                      {item}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                              </FormControl>
+                            </>
+                          </Box>
                         </Box>
                       </Box>
-                    </Box>
-                  </DashboardCard>
+                    </DashboardCard>
+                  </Grid>
+                </Grid>
+                <Grid container item xs={12} spacing={2}>
+                  <Grid item xs={6}>
+                    <DashboardCard title="Ingredients">
+                      <Box display="flex" flex={1} flexDirection="column">
+                        {ingredientsList.map((ingredient, i) => {
+                          return (
+                            <Box key={`${ingredient}-${i}`} mb={1}>
+                              <TextField
+                                className={classes.input}
+                                label="ingredient"
+                                name="ingredient"
+                                variant="filled"
+                                value={ingredient.ingredient}
+                                onChange={(e) => handleIngredientInputChange(e, i, props)}
+                                InputProps={{
+                                  endAdornment: (
+                                    <InputAdornment position="end">
+                                      <IconButton
+                                        aria-label="remove-ingredient"
+                                        onClick={() => handleIngredientRemoveClick(i, props)}
+                                        edge="end"
+                                      >
+                                        <CancelIcon />
+                                      </IconButton>
+                                    </InputAdornment>
+                                  ),
+                                }}
+                              />
+                            </Box>
+                          )
+                        })}
+
+                        <Box>
+                          <Button
+                            onClick={handleIngredientAddClick}
+                            variant="contained"
+                            color="primary"
+                            size="small"
+                            startIcon={<AddIcon />}
+                            className={classes.button}
+                          >
+                            Add
+                          </Button>
+                        </Box>
+                      </Box>
+                    </DashboardCard>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <DashboardCard title="Steps">
+                      <Box display="flex" flex={1} flexDirection="column">
+                        {stepsList.map((step, i) => {
+                          return (
+                            <Box key={`${step}-${i}`} mb={1}>
+                              <TextField
+                                className={classes.input}
+                                label={`Step ${i + 1}`}
+                                name="stepDescription"
+                                variant="filled"
+                                multiline
+                                rows={2}
+                                value={step.stepDescription}
+                                onChange={(e) => handleStepsInputChange(e, i, props)}
+                                InputProps={{
+                                  endAdornment: (
+                                    <InputAdornment position="end">
+                                      <IconButton
+                                        aria-label="remove-ingredient"
+                                        onClick={() => handleStepsRemoveClick(i, props)}
+                                        edge="end"
+                                      >
+                                        <CancelIcon />
+                                      </IconButton>
+                                    </InputAdornment>
+                                  ),
+                                }}
+                              />
+                            </Box>
+                          )
+                        })}
+
+                        <Box>
+                          <Button
+                            onClick={handleStepsAddClick}
+                            variant="contained"
+                            color="primary"
+                            size="small"
+                            startIcon={<AddIcon />}
+                            className={classes.button}
+                          >
+                            Add
+                          </Button>
+                        </Box>
+                      </Box>
+                    </DashboardCard>
+                  </Grid>
                 </Grid>
               </Grid>
-              <Grid container item xs={12} spacing={2}>
-                <Grid item xs={6}>
-                  <DashboardCard title="Ingredients">
-                    <Box display="flex" flex={1} flexDirection="column">
-                      {ingredientsList.map((ingredient, i) => {
-                        return (
-                          <Box key={`${ingredient}-${i}`} mb={1}>
-                            <TextField
-                              className={classes.input}
-                              label="ingredient"
-                              name="ingredient"
-                              variant="filled"
-                              value={ingredient.ingredient}
-                              onChange={(e) => handleIngredientInputChange(e, i, props)}
-                              InputProps={{
-                                endAdornment: (
-                                  <InputAdornment position="end">
-                                    <IconButton
-                                      aria-label="remove-ingredient"
-                                      onClick={() => handleIngredientRemoveClick(i, props)}
-                                      edge="end"
-                                    >
-                                      <CancelIcon />
-                                    </IconButton>
-                                  </InputAdornment>
-                                ),
-                              }}
-                            />
-                          </Box>
-                        )
-                      })}
-
-                      <Box>
-                        <Button
-                          onClick={handleIngredientAddClick}
-                          variant="contained"
-                          color="primary"
-                          size="small"
-                          startIcon={<AddIcon />}
-                          className={classes.button}
-                        >
-                          Add
-                        </Button>
-                      </Box>
-                    </Box>
-                  </DashboardCard>
-                </Grid>
-                <Grid item xs={6}>
-                  <DashboardCard title="Steps">
-                    <Box display="flex" flex={1} flexDirection="column">
-                      {stepsList.map((step, i) => {
-                        return (
-                          <Box key={`${step}-${i}`} mb={1}>
-                            <TextField
-                              className={classes.input}
-                              label={`Step ${i + 1}`}
-                              name="stepDescription"
-                              variant="filled"
-                              multiline
-                              rows={2}
-                              value={step.stepDescription}
-                              onChange={(e) => handleStepsInputChange(e, i, props)}
-                              InputProps={{
-                                endAdornment: (
-                                  <InputAdornment position="end">
-                                    <IconButton
-                                      aria-label="remove-ingredient"
-                                      onClick={() => handleStepsRemoveClick(i, props)}
-                                      edge="end"
-                                    >
-                                      <CancelIcon />
-                                    </IconButton>
-                                  </InputAdornment>
-                                ),
-                              }}
-                            />
-                          </Box>
-                        )
-                      })}
-
-                      <Box>
-                        <Button
-                          onClick={handleStepsAddClick}
-                          variant="contained"
-                          color="primary"
-                          size="small"
-                          startIcon={<AddIcon />}
-                          className={classes.button}
-                        >
-                          Add
-                        </Button>
-                      </Box>
-                    </Box>
-                  </DashboardCard>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              startIcon={<SaveIcon />}
-              type="submit"
-              className={classes.button}
-            >
-              Save
-            </Button>
-          </Form>
-        )}
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                startIcon={<SaveIcon />}
+                type="submit"
+                className={classes.button}
+              >
+                Save
+              </Button>
+            </Form>
+          )
+        }}
       </Formik>
     </Content>
   )

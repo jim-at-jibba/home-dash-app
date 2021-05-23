@@ -12,17 +12,17 @@ import {
   CircularProgress,
 } from "@material-ui/core"
 import Alert from "@material-ui/lab/Alert"
-import {useField} from "formik"
+import {FieldArray, useField} from "formik"
 import React from "react"
 import {useGetFoodCategoriesQuery} from "src/generated/graphql"
 
 export const CategorySelect = (): JSX.Element => {
   const classes = useStyles()
-  const [field, meta] = useField("categoryId")
+  const [field, meta] = useField("categoryIds")
 
   const {data, loading, error} = useGetFoodCategoriesQuery()
 
-  if (data == null || data.getFoodCategory == null || loading) {
+  if (data == null || data.getFoodCategories == null || loading) {
     return (
       <div className={classes.loading}>
         <CircularProgress />
@@ -34,30 +34,44 @@ export const CategorySelect = (): JSX.Element => {
     console.log("There was an error fetching available categories", error)
   }
 
-  const {getFoodCategory: categories} = data
+  const {getFoodCategories: categories} = data
 
   return (
-    <Box display="flex" flexDirection="column">
-      {meta.touched && meta.error ? (
-        <Box mb={2}>
-          <Alert severity="error">{meta.error}</Alert>
-        </Box>
-      ) : null}
-      <FormControl className={classes.root} variant="filled" error={meta.touched && !!meta.error}>
-        <InputLabel>Category</InputLabel>
+    <FieldArray
+      name="categoryIds"
+      render={({push}) => (
+        <Box display="flex" flexDirection="column">
+          {meta.touched && meta.error ? (
+            <Box mb={2}>
+              <Alert severity="error">{meta.error}</Alert>
+            </Box>
+          ) : null}
+          <FormControl
+            className={classes.root}
+            variant="filled"
+            error={meta.touched && !!meta.error}
+          >
+            <InputLabel>Category</InputLabel>
 
-        <Select {...field} name="categoryId">
-          <MenuItem key="emplty" value="">
-            No selection
-          </MenuItem>
-          {categories.map((item) => (
-            <MenuItem key={item.id} value={item.id} className={classes.text}>
-              {item.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Box>
+            <Select
+              {...field}
+              onChange={(e) => {
+                push(e.target.value)
+              }}
+            >
+              <MenuItem key="emplty" value="">
+                No selection
+              </MenuItem>
+              {categories.map((item) => (
+                <MenuItem key={item.id} value={item.id} className={classes.text}>
+                  {item.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      )}
+    />
   )
 }
 

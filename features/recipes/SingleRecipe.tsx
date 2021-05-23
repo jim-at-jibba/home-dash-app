@@ -73,7 +73,7 @@ const CreateRecipeForm: FunctionComponent = () => {
     serves,
     ingredients,
     steps,
-    category,
+    categories,
     course,
     image,
   } = data.getRecipeById
@@ -128,7 +128,13 @@ const CreateRecipeForm: FunctionComponent = () => {
                   width="100%"
                 >
                   <Box m={1}>
-                    <Typography variant="body1">{category}</Typography>
+                    {categories.map((cat) => {
+                      return (
+                        <Typography variant="body1" key={cat}>
+                          {cat}
+                        </Typography>
+                      )
+                    })}
                   </Box>
                   <Box m={1}>
                     <Typography variant="body1">{course}</Typography>
