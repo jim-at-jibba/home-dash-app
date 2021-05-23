@@ -74,6 +74,31 @@ export const GET_FOOD_COURSES = gql`
   }
 `
 
+export const GET_RECIPE_BY_ID = gql`
+  query GetRecipeById($input: GetRecipeByIdInput!) {
+    getRecipeById(input: $input) {
+      id
+      name
+      course
+      category
+      description
+      image
+      cookTime
+      prepTime
+      serves
+      steps {
+        id
+        stepNumber
+        stepDescription
+      }
+      ingredients {
+        id
+        ingredient
+      }
+    }
+  }
+`
+
 export const CREATE_RECIPE = gql`
   mutation CreateRecipe($input: RecipeInput!) {
     createRecipe(input: $input) {
