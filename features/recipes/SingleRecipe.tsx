@@ -8,7 +8,6 @@ import List from "@material-ui/core/List"
 import ListItem from "@material-ui/core/ListItem"
 // import ListItemIcon from "@material-ui/core/ListItemIcon"
 import ListItemText from "@material-ui/core/ListItemText"
-import Image from "next/image"
 import TimerIcon from "@material-ui/icons/Timer"
 import RestaurantIcon from "@material-ui/icons/Restaurant"
 
@@ -82,16 +81,16 @@ const CreateRecipeForm: FunctionComponent = () => {
       <Grid container direction="column" spacing={4}>
         <Grid container item xs={12} spacing={2}>
           <Grid item xs={4}>
-            <DashboardCard title="Recipe Image">
-              <Image src={image} alt={`${name} recipe image`} width={345} height="100%" />
+            <DashboardCard>
+              <img src={image} alt={`${name} recipe`} width={345} height="auto" />
             </DashboardCard>
           </Grid>
           <Grid item xs={8}>
-            <DashboardCard title="Recipe Details">
+            <DashboardCard>
               <Box
                 display="flex"
-                flexDirection="row"
-                alignItems="center"
+                flexDirection="column"
+                alignItems="flex-start"
                 justifyContent="space-around"
                 width="100%"
               >
@@ -103,31 +102,41 @@ const CreateRecipeForm: FunctionComponent = () => {
                     <Typography variant="body1">{description}</Typography>
                   </Box>
                 </Box>
-                <Box display="flex" flexDirection="row" m={1}>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  mx={1}
+                  my={3}
+                  justifyContent="flex-start"
+                  width="100%"
+                >
                   <Box display="flex" flexDirection="row">
-                    <TimerIcon />
+                    <TimerIcon color="secondary" />
                     <Box ml={2}>
-                      <Typography variant="body1">Prep: {prepTime}</Typography>
-                      <Typography variant="body1">Cook: {cookTime}</Typography>
+                      <Typography variant="body1">
+                        <strong>Prep:</strong> {prepTime} mins
+                      </Typography>
+                      <Typography variant="body1">
+                        <strong>Cook:</strong> {cookTime} mins
+                      </Typography>
                     </Box>
                   </Box>
-                  <Box display="flex" flexDirection="row" ml={2}>
-                    <RestaurantIcon />
+                  <Box display="flex" flexDirection="row" ml={5}>
+                    <RestaurantIcon color="secondary" />
                     <Box ml={2}>
-                      <Typography variant="body2">Serves: {serves}</Typography>
+                      <Typography variant="body1">
+                        <strong>Serves:</strong> {serves}
+                      </Typography>
                     </Box>
                   </Box>
                 </Box>
               </Box>
-              <Box>
-                <Box
-                  display="flex"
-                  flexDirection="row"
-                  justifyContent="space-around"
-                  alignItems="center"
-                  width="100%"
-                >
-                  <Box m={1}>
+              <Box width="100%">
+                <Box display="flex" flexDirection="row" alignItems="flex-start" width="100%">
+                  <Box m={1} mr={5}>
+                    <Typography variant="body1" color="secondary">
+                      Categories:
+                    </Typography>
                     {categories.map((cat) => {
                       return (
                         <Typography variant="body1" key={cat}>
@@ -137,6 +146,9 @@ const CreateRecipeForm: FunctionComponent = () => {
                     })}
                   </Box>
                   <Box m={1}>
+                    <Typography variant="body1" color="secondary">
+                      Course:
+                    </Typography>
                     <Typography variant="body1">{course}</Typography>
                   </Box>
                 </Box>
@@ -167,7 +179,7 @@ const CreateRecipeForm: FunctionComponent = () => {
                   {steps.map((item) => {
                     return (
                       <ListItem key={item.id}>
-                        <ListItemText primary={`${item.stepNumber}: ${item.stepDescription}`} />
+                        <ListItemText primary={`${item.stepNumber + 1}: ${item.stepDescription}`} />
                       </ListItem>
                     )
                   })}
