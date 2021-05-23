@@ -55,7 +55,7 @@ export const CREATE_IMAGE_SIGNATURE = gql`
 
 export const GET_FOOD_CATEGORIES = gql`
   query GetFoodCategories {
-    getFoodCategory {
+    getFoodCategories {
       id
       name
       createdAt
@@ -63,6 +63,7 @@ export const GET_FOOD_CATEGORIES = gql`
     }
   }
 `
+
 export const GET_FOOD_COURSES = gql`
   query GetFoodCourses {
     getFoodCourses {
@@ -80,7 +81,7 @@ export const GET_RECIPE_BY_ID = gql`
       id
       name
       course
-      category
+      categories
       description
       image
       cookTime
@@ -105,7 +106,7 @@ export const CREATE_RECIPE = gql`
       id
       name
       course
-      category
+      categories
       description
       ingredients {
         id
@@ -120,6 +121,14 @@ export const CREATE_RECIPE = gql`
       cookTime
       prepTime
       serves
+    }
+  }
+`
+
+export const CREATE_BBC_RECIPE = gql`
+  mutation CreateBbcRecipe($input: CreateBBCRecipeInput!) {
+    createRecipeFromBBC(input: $input) {
+      id
     }
   }
 `

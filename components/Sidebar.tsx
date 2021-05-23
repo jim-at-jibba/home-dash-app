@@ -99,6 +99,9 @@ const Sidebar: FunctionComponent<Props> = ({open, handleDrawerClose}) => {
           <MenuItemNext path="/recipes/create-recipe" label="New recipe">
             <AddBoxIcon />
           </MenuItemNext>
+          <MenuItemNext path="/recipes/create-recipe-bbc" label="New BBC recipe">
+            <AddBoxIcon />
+          </MenuItemNext>
           <MenuItemNext path="/recipes/settings" label="Recipe settings">
             <SettingsIcon />
           </MenuItemNext>
