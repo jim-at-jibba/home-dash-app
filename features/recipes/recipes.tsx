@@ -1,27 +1,11 @@
 import Content from "@/components/Content"
 import RecipeReviewCard from "@/features/recipes/components/RecipeCard"
-import {createStyles, Grid, makeStyles, Theme} from "@material-ui/core"
+import {Box} from "@material-ui/core"
 import {FunctionComponent} from "react"
 import {useGetRecipesQuery} from "src/generated/graphql"
 import {Alert} from "@material-ui/lab"
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      height: 140,
-      width: 100,
-    },
-    control: {
-      padding: theme.spacing(2),
-    },
-  }),
-)
-
 const Recipes: FunctionComponent = () => {
-  const classes = useStyles()
   const {data, error, loading} = useGetRecipesQuery()
 
   console.log(data, error, loading)
@@ -37,17 +21,13 @@ const Recipes: FunctionComponent = () => {
   const {getRecipes} = data
   return (
     <Content>
-      <Grid container className={classes.root} spacing={2}>
-        <Grid item xs={12}>
-          <Grid container justify="center" spacing={2}>
-            {getRecipes.map((recipe) => (
-              <Grid key={recipe.id} item>
-                <RecipeReviewCard recipe={recipe} />
-              </Grid>
-            ))}
-          </Grid>
-        </Grid>
-      </Grid>
+      <Box display="flex" flexDirection="row" flexWrap="wrap">
+        {getRecipes.map((recipe) => (
+          <Box display="flex" key={recipe.id} m={1}>
+            <RecipeReviewCard recipe={recipe} />
+          </Box>
+        ))}
+      </Box>
     </Content>
   )
 }
