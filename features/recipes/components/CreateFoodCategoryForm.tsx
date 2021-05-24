@@ -50,12 +50,10 @@ const RecipeCategoryForm: FunctionComponent = () => {
     validationSchema,
     onSubmit: async (values) => {
       closeAlert()
-      console.log({values})
       try {
         await createCategory({
           variables: {input: {name: values.name}},
           update() {
-            console.log("complete")
             formik.resetForm()
             showSuccessAlert("Food category created successfully")
             push("/recipes")

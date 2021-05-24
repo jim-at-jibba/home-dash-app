@@ -49,14 +49,12 @@ const RecipeCourseForm: FunctionComponent = () => {
     initialValues: {name: ""},
     validationSchema,
     onSubmit: async (values) => {
-      console.log({values})
       closeAlert()
       //await onSubmit(values as {name: string})
       try {
         await createCourse({
           variables: {input: {name: values.name}},
           update() {
-            console.log("complete")
             formik.resetForm()
             showSuccessAlert("Food course created successfully")
             push("/recipes")

@@ -47,13 +47,11 @@ interface Props {
 }
 
 const RecipeReviewCard: FunctionComponent<Props> = ({recipe}) => {
-  console.log({recipe})
   const classes = useStyles()
   const {push} = useRouter()
   const [expanded, setExpanded] = React.useState(false)
   const [getRecipeSteps, {data, loading}] = useGetRecipeStepsLazyQuery()
 
-  console.log(data, loading)
   const handleExpandClick = () => {
     setExpanded(!expanded)
     getRecipeSteps({variables: {input: {id: recipe.id}}})

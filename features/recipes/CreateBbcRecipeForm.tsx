@@ -71,7 +71,6 @@ async function uploadImage(
   signature: string,
   timestamp: number,
 ): Promise<IUploadImageResponse> {
-  console.log(process.env.NEXT_PUBLIC_CLOUDINARY_KEY, signature, timestamp)
   const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`
 
   const formData = new FormData()
@@ -127,7 +126,6 @@ const CreateBbcRecipeForm: FunctionComponent = () => {
           closeAlert()
 
           try {
-            console.log({values})
             await createRecipe({
               variables: {
                 input: {
@@ -189,7 +187,6 @@ const CreateBbcRecipeForm: FunctionComponent = () => {
 
                             if (imageSignatureData) {
                               const {signature, timestamp} = imageSignatureData.createImageSignature
-                              console.log(signature, timestamp)
                               const imageResult = await uploadImage(file, signature, timestamp)
                               const imageUrl = imageResult.secure_url
 

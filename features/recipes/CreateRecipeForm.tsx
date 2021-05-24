@@ -91,7 +91,6 @@ async function uploadImage(
   signature: string,
   timestamp: number,
 ): Promise<IUploadImageResponse> {
-  console.log(process.env.NEXT_PUBLIC_CLOUDINARY_KEY, signature, timestamp)
   const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`
 
   const formData = new FormData()
@@ -160,10 +159,6 @@ const CreateRecipeForm: FunctionComponent = () => {
     recipeImage: yup.mixed().required("Recipe image is require."),
   })
 
-  React.useEffect(() => {
-    console.log("WHAT", stepsList)
-  }, [stepsList])
-
   const handleIngredientInputChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
     index: number,
@@ -199,7 +194,6 @@ const CreateRecipeForm: FunctionComponent = () => {
   ) => {
     const {value} = e.target
     const list = [...stepsList]
-    console.log(list, index)
     list[index]["stepDescription"] = value
     list[index]["stepNumber"] = index + 1
     setStepsList(list)
@@ -240,7 +234,6 @@ const CreateRecipeForm: FunctionComponent = () => {
           closeAlert()
 
           try {
-            console.log({values})
             await createRecipe({
               variables: {
                 input: {
@@ -271,7 +264,6 @@ const CreateRecipeForm: FunctionComponent = () => {
         }}
       >
         {(props: FormikProps<RecipeFormValues>) => {
-          console.log(props)
           return (
             <Form>
               <Grid container direction="column" spacing={4}>
@@ -307,7 +299,6 @@ const CreateRecipeForm: FunctionComponent = () => {
                                   signature,
                                   timestamp,
                                 } = imageSignatureData.createImageSignature
-                                console.log(signature, timestamp)
                                 const imageResult = await uploadImage(file, signature, timestamp)
                                 const imageUrl = imageResult.secure_url
 

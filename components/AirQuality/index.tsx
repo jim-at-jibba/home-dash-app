@@ -15,8 +15,6 @@ const TempHumidityGauge: FunctionComponent<Props> = ({title}) => {
     variables: {input: {topic: "living-room/enviro"}},
   })
 
-  console.log(data, loading, error)
-
   return (
     <DashboardCard title={title} loading={loading} error={!!error}>
       <Box className={classes.guagesWrapper}>
