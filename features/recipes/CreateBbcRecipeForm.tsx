@@ -14,6 +14,8 @@ import {CategorySelect} from "./components/CategorySelect"
 import {CourseSelect} from "./components/CourseSelect"
 import {Alert} from "@material-ui/lab"
 import {useCreateBbcRecipeMutation, useCreateImageSignatureMutation} from "src/generated/graphql"
+import SubmissionAlert, {useSubmissionAlert} from "@/components/SubmissionAlert"
+import {useRouter} from "next/router"
 // import {Alert} from "@material-ui/lab"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -91,6 +93,7 @@ async function uploadImage(
 const CreateBbcRecipeForm: FunctionComponent = () => {
   const classes = useStyles()
   const [previewImage, setPreviewImage] = React.useState<string>()
+  const {push} = useRouter()
 
   const [createImageSignature] = useCreateImageSignatureMutation()
   const [createRecipe] = useCreateBbcRecipeMutation()
@@ -101,6 +104,13 @@ const CreateBbcRecipeForm: FunctionComponent = () => {
     courseId: yup.string().min(1, "Must be longer that 1 char").required("A course is require."),
     recipeImage: yup.mixed().required("Recipe image is require."),
   })
+
+  const [
+    submissionAlertProps,
+    showSuccessAlert,
+    showWarningAlert,
+    closeAlert,
+  ] = useSubmissionAlert()
 
   return (
     <Content>
@@ -114,6 +124,7 @@ const CreateBbcRecipeForm: FunctionComponent = () => {
         validationSchema={validationSchema}
         onSubmit={async (values, actions) => {
           await actions.validateForm(values)
+          closeAlert()
 
           try {
             console.log({values})
@@ -133,10 +144,16 @@ const CreateBbcRecipeForm: FunctionComponent = () => {
                   ...values,
                 },
               },
+              update() {
+                actions.setSubmitting(false)
+                showSuccessAlert("Recipe created successfully")
+                push("/recipes")
+              },
             })
           } catch (err) {
             console.log(err)
             actions.setSubmitting(false)
+            showWarningAlert("Error creating recipe")
           }
         }}
       >
@@ -239,6 +256,7 @@ const CreateBbcRecipeForm: FunctionComponent = () => {
           </Form>
         )}
       </Formik>
+      <SubmissionAlert {...submissionAlertProps} />
     </Content>
   )
 }
