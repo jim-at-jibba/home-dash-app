@@ -11,12 +11,7 @@ export interface Props {
   onClose: () => void
 }
 
-const SubmissionAlert: FunctionComponent<Props> = ({
-  message,
-  open,
-  onClose,
-  severity,
-}) => {
+const SubmissionAlert: FunctionComponent<Props> = ({message, open, onClose, severity}) => {
   return (
     <Snackbar
       open={open}
@@ -24,12 +19,7 @@ const SubmissionAlert: FunctionComponent<Props> = ({
       onClose={onClose}
       TransitionComponent={SlideUpTransition}
     >
-      <Alert
-        elevation={6}
-        variant="filled"
-        onClose={onClose}
-        severity={severity}
-      >
+      <Alert elevation={6} variant="filled" onClose={onClose} severity={severity}>
         {message}
       </Alert>
     </Snackbar>
@@ -44,25 +34,18 @@ const SlideUpTransition: React.ComponentType<
 
 type ShowAlertFunc = (message: string) => void
 
-function useSubmissionAlert(): [
-  Props,
-  ShowAlertFunc,
-  ShowAlertFunc,
-  () => void,
-] {
-  const [submissionAlertProps, setSubmissionAlertProps] = React.useState<Props>(
-    {
-      open: false,
-      message: "",
-      severity: "success",
-      onClose: React.useCallback(() => {
-        setSubmissionAlertProps((prevState) => ({
-          ...prevState,
-          open: false,
-        }))
-      }, []),
-    },
-  )
+function useSubmissionAlert(): [Props, ShowAlertFunc, ShowAlertFunc, () => void] {
+  const [submissionAlertProps, setSubmissionAlertProps] = React.useState<Props>({
+    open: false,
+    message: "",
+    severity: "success",
+    onClose: React.useCallback(() => {
+      setSubmissionAlertProps((prevState) => ({
+        ...prevState,
+        open: false,
+      }))
+    }, []),
+  })
 
   const showSuccessAlert = React.useCallback((message: string) => {
     setSubmissionAlertProps((prevState) => ({
@@ -82,12 +65,7 @@ function useSubmissionAlert(): [
     }))
   }, [])
 
-  return [
-    submissionAlertProps,
-    showSuccessAlert,
-    showWarningAlert,
-    submissionAlertProps.onClose,
-  ]
+  return [submissionAlertProps, showSuccessAlert, showWarningAlert, submissionAlertProps.onClose]
 }
 
 export default SubmissionAlert

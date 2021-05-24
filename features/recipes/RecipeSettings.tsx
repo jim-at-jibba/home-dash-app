@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const RecipeSettings: FunctionComponent = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const classes = useStyles()
+
   return (
     <Content>
       <Grid container direction="column" spacing={4}>

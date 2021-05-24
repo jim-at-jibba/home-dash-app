@@ -11,6 +11,8 @@ import DashboardCard from "@/components/Paper"
 import * as yup from "yup"
 import {useFormik} from "formik"
 import {useCreateFoodCourseMutation} from "src/generated/graphql"
+import SubmissionAlert, {useSubmissionAlert} from "@/components/SubmissionAlert"
+import {useRouter} from "next/router"
 // import {Alert} from "@material-ui/lab"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -30,24 +32,40 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const RecipeCourseForm: FunctionComponent = () => {
   const classes = useStyles()
+  const {push} = useRouter()
   const [createCourse] = useCreateFoodCourseMutation()
   const validationSchema = yup.object({
     name: yup.string().required("Course name is require."),
   })
+
+  const [
+    submissionAlertProps,
+    showSuccessAlert,
+    showWarningAlert,
+    closeAlert,
+  ] = useSubmissionAlert()
 
   const formik = useFormik<{name: string}>({
     initialValues: {name: ""},
     validationSchema,
     onSubmit: async (values) => {
       console.log({values})
+      closeAlert()
       //await onSubmit(values as {name: string})
-      createCourse({
-        variables: {input: {name: values.name}},
-        update() {
-          console.log("complete")
-          formik.resetForm()
-        },
-      })
+      try {
+        await createCourse({
+          variables: {input: {name: values.name}},
+          update() {
+            console.log("complete")
+            formik.resetForm()
+            showSuccessAlert("Food course created successfully")
+            push("/recipes")
+          },
+        })
+      } catch (err) {
+        console.log(err)
+        showWarningAlert("Error creating recipe")
+      }
     },
   })
 
@@ -88,6 +106,7 @@ const RecipeCourseForm: FunctionComponent = () => {
           </Button>
         </form>
       </DashboardCard>
+      <SubmissionAlert {...submissionAlertProps} />
     </Content>
   )
 }

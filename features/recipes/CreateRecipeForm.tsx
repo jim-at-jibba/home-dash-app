@@ -28,6 +28,8 @@ import {CategorySelect} from "./components/CategorySelect"
 import {CourseSelect} from "./components/CourseSelect"
 import {Alert} from "@material-ui/lab"
 import {useCreateImageSignatureMutation, useCreateRecipeMutation} from "src/generated/graphql"
+import SubmissionAlert, {useSubmissionAlert} from "@/components/SubmissionAlert"
+import {useRouter} from "next/router"
 // import {Alert} from "@material-ui/lab"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -110,6 +112,13 @@ async function uploadImage(
 
 const CreateRecipeForm: FunctionComponent = () => {
   const classes = useStyles()
+  const [
+    submissionAlertProps,
+    showSuccessAlert,
+    showWarningAlert,
+    closeAlert,
+  ] = useSubmissionAlert()
+  const {push} = useRouter()
   const [ingredientsList, setIngredientsList] = React.useState<Array<{ingredient: string}>>([
     {ingredient: ""},
   ])
@@ -228,6 +237,7 @@ const CreateRecipeForm: FunctionComponent = () => {
         validationSchema={validationSchema}
         onSubmit={async (values, actions) => {
           await actions.validateForm(values)
+          closeAlert()
 
           try {
             console.log({values})
@@ -247,10 +257,16 @@ const CreateRecipeForm: FunctionComponent = () => {
                   ...values,
                 },
               },
+              update() {
+                actions.setSubmitting(false)
+                showSuccessAlert("Recipe created successfully")
+                push("/recipes")
+              },
             })
           } catch (err) {
             console.log(err)
             actions.setSubmitting(false)
+            showWarningAlert("Error creating recipe")
           }
         }}
       >
@@ -510,6 +526,7 @@ const CreateRecipeForm: FunctionComponent = () => {
           )
         }}
       </Formik>
+      <SubmissionAlert {...submissionAlertProps} />
     </Content>
   )
 }

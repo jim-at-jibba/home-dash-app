@@ -11,6 +11,8 @@ import DashboardCard from "@/components/Paper"
 import * as yup from "yup"
 import {useFormik} from "formik"
 import {useCreateFoodCategoryMutation} from "src/generated/graphql"
+import SubmissionAlert, {useSubmissionAlert} from "@/components/SubmissionAlert"
+import {useRouter} from "next/router"
 // import {Alert} from "@material-ui/lab"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -30,6 +32,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const RecipeCategoryForm: FunctionComponent = () => {
   const classes = useStyles()
+  const [
+    submissionAlertProps,
+    showSuccessAlert,
+    showWarningAlert,
+    closeAlert,
+  ] = useSubmissionAlert()
+  const {push} = useRouter()
   const [createCategory] = useCreateFoodCategoryMutation()
 
   const validationSchema = yup.object({
@@ -40,14 +49,22 @@ const RecipeCategoryForm: FunctionComponent = () => {
     initialValues: {name: ""},
     validationSchema,
     onSubmit: async (values) => {
+      closeAlert()
       console.log({values})
-      createCategory({
-        variables: {input: {name: values.name}},
-        update() {
-          console.log("complete")
-          formik.resetForm()
-        },
-      })
+      try {
+        await createCategory({
+          variables: {input: {name: values.name}},
+          update() {
+            console.log("complete")
+            formik.resetForm()
+            showSuccessAlert("Food category created successfully")
+            push("/recipes")
+          },
+        })
+      } catch (err) {
+        console.log(err)
+        showWarningAlert("Error creating recipe")
+      }
     },
   })
 
@@ -88,6 +105,7 @@ const RecipeCategoryForm: FunctionComponent = () => {
           </Button>
         </form>
       </DashboardCard>
+      <SubmissionAlert {...submissionAlertProps} />
     </Content>
   )
 }
