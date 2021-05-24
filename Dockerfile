@@ -4,6 +4,7 @@ WORKDIR /app
 
 # copy source files
 COPY . /app
+COPY .env.development .env
 
 # install dependencies
 RUN npm install
