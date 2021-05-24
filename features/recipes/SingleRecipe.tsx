@@ -179,7 +179,7 @@ const CreateRecipeForm: FunctionComponent = () => {
                   {steps.map((item) => {
                     return (
                       <ListItem key={item.id}>
-                        <ListItemText primary={`${item.stepNumber + 1}: ${item.stepDescription}`} />
+                        <ListItemText primary={`${item.stepNumber}: ${item.stepDescription}`} />
                       </ListItem>
                     )
                   })}
