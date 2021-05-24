@@ -4,7 +4,8 @@ WORKDIR /app
 
 # copy source files
 COPY . /app
-COPY .env.development .env
+ENV NEXT_PUBLIC_CLOUDINARY_KEY="718559536646772"
+ENV NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="zilla"
 
 # install dependencies
 RUN npm install
