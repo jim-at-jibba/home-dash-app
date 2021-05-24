@@ -80,12 +80,12 @@ const CreateRecipeForm: FunctionComponent = () => {
     <Content>
       <Grid container direction="column" spacing={4}>
         <Grid container item xs={12} spacing={2}>
-          <Grid item xs={4}>
+          <Grid item xs={12} lg={4}>
             <DashboardCard>
               <img src={image} alt={`${name} recipe`} width={345} height="auto" />
             </DashboardCard>
           </Grid>
-          <Grid item xs={8}>
+          <Grid item lg={8} xs={12}>
             <DashboardCard>
               <Box
                 display="flex"

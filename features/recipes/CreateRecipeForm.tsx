@@ -260,7 +260,7 @@ const CreateRecipeForm: FunctionComponent = () => {
             <Form>
               <Grid container direction="column" spacing={4}>
                 <Grid container item xs={12} spacing={2}>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} lg={4}>
                     <DashboardCard title="Recipe Image">
                       <Box width="100%">
                         {!previewImage && (
@@ -326,7 +326,7 @@ const CreateRecipeForm: FunctionComponent = () => {
                       </Box>
                     </DashboardCard>
                   </Grid>
-                  <Grid item xs={8}>
+                  <Grid item lg={8} xs={12}>
                     <DashboardCard title="Recipe Details">
                       <Box display="flex" flex={1} flexDirection="column">
                         <Box display="flex" flex={1} mb={2}>
