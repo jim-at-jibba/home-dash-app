@@ -15,6 +15,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import {RecipeDetails, useGetRecipeStepsLazyQuery} from "src/generated/graphql"
 import {dateFormat} from "@/utils/dates"
 import {LinearProgress} from "@material-ui/core"
+import {useRouter} from "next/router"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,6 +49,7 @@ interface Props {
 const RecipeReviewCard: FunctionComponent<Props> = ({recipe}) => {
   console.log({recipe})
   const classes = useStyles()
+  const {push} = useRouter()
   const [expanded, setExpanded] = React.useState(false)
   const [getRecipeSteps, {data, loading}] = useGetRecipeStepsLazyQuery()
 
@@ -77,11 +79,15 @@ const RecipeReviewCard: FunctionComponent<Props> = ({recipe}) => {
         }
         title={recipe.name}
         subheader={dateFormat(recipe.createdAt, "dd LLL, yyyy")}
+        onClick={() => push(`/recipes/${recipe.id}`)}
+        style={{cursor: "pointer"}}
       />
       <CardMedia
         className={classes.media}
         image={recipe.image != "" ? recipe.image : "/images/recipe-placeholder.png"}
         title={recipe.name}
+        onClick={() => push(`/recipes/${recipe.id}`)}
+        style={{cursor: "pointer"}}
       />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
