@@ -1,59 +1,37 @@
 import Content from "@/components/Content"
-import {Box, Grid, Typography} from "@material-ui/core"
-import React, {FunctionComponent} from "react"
 import DashboardCard from "@/components/Paper"
-import {useGetRecipeByIdLazyQuery} from "src/generated/graphql"
 import useMatchPath from "@/hooks/useMatchPath"
+import {Box, createStyles, Grid, makeStyles, Theme, Typography} from "@material-ui/core"
 import List from "@material-ui/core/List"
 import ListItem from "@material-ui/core/ListItem"
 // import ListItemIcon from "@material-ui/core/ListItemIcon"
 import ListItemText from "@material-ui/core/ListItemText"
-import TimerIcon from "@material-ui/icons/Timer"
 import RestaurantIcon from "@material-ui/icons/Restaurant"
+import TimerIcon from "@material-ui/icons/Timer"
+import React, {FunctionComponent, useState} from "react"
+import {useGetRecipeByIdLazyQuery} from "src/generated/graphql"
 
 // const useStyles = makeStyles((theme: Theme) =>
 //   createStyles({
-//     form: {
-//       width: "100%",
-//       padding: theme.spacing(4),
-//     },
-//     formControl: {
-//       width: "100%",
-//     },
-//     button: {
-//       marginTop: theme.spacing(1),
-//     },
-//     input: {
-//       width: "100%",
-//       minWidth: 350,
-
-//       "& .MuiFormHelperText-contained": {
-//         marginLeft: 0,
-//       },
-//     },
-//     imageUploader: {
-//       width: "100%",
-//       height: "200px",
-//       border: `2px dashed ${theme.palette.secondary.main}`,
-//       borderRadius: theme.shape.borderRadius,
-//       display: "flex",
-//       alignItems: "center",
-//       justifyContent: "center",
-//     },
-//     previewImage: {
-//       objectFit: "cover",
-//       width: "100%",
-//       height: "auto",
+//     modal: {
+//       position: "absolute",
+//       top: "50%",
+//       left: "50%",
+//       transform: "translate(-50%, -50%)",
+//       width: 400,
+//       background: `${theme.palette.primary.dark}`,
+//       border: "2px solid #000",
+//       boxShadow: "24",
+//       padding: 4,
 //     },
 //   }),
 // )
 
-const CreateRecipeForm: FunctionComponent = () => {
+const SingleRecipe: FunctionComponent = () => {
   // const classes = useStyles()
   const {matches, params} = useMatchPath("/recipes/:id")
   const [getRecipes, {data, loading, error}] = useGetRecipeByIdLazyQuery()
 
-  console.log(loading, error)
   React.useEffect(() => {
     if (matches && params && data == null) {
       getRecipes({variables: {input: {id: params.id}}})
@@ -62,6 +40,16 @@ const CreateRecipeForm: FunctionComponent = () => {
 
   if (data?.getRecipeById == null || loading) {
     return null
+  }
+
+  const copyIngrdientsList = () => {
+    const content = ingredients.map((item) => item.ingredient)
+    const el = document.createElement("textarea")
+    el.value = content.join("\n")
+    document.body.appendChild(el)
+    el.select()
+    document.execCommand("copy")
+    document.body.removeChild(el)
   }
 
   const {
@@ -158,7 +146,7 @@ const CreateRecipeForm: FunctionComponent = () => {
         </Grid>
         <Grid container item xs={12} spacing={2}>
           <Grid item xs={6}>
-            <DashboardCard title="Ingredients">
+            <DashboardCard title="Ingredients" handleIconClick={copyIngrdientsList}>
               <Box display="flex" flexDirection="column" alignItems="flex-start" width="100%">
                 <List aria-label="secondary mailbox folders">
                   {ingredients.map((item) => {
@@ -192,4 +180,4 @@ const CreateRecipeForm: FunctionComponent = () => {
     </Content>
   )
 }
-export default CreateRecipeForm
+export default SingleRecipe

@@ -4,13 +4,21 @@ import Typography from "@material-ui/core/Typography"
 import Paper from "@material-ui/core/Paper"
 import React, {FunctionComponent} from "react"
 import {Alert} from "@material-ui/lab"
+import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted"
 
 interface Props {
   title?: string
   error?: boolean
   loading?: boolean
+  handleIconClick?: () => void
 }
-const DashboardCard: FunctionComponent<Props> = ({title, loading = false, error, children}) => {
+const DashboardCard: FunctionComponent<Props> = ({
+  title,
+  loading = false,
+  error,
+  children,
+  handleIconClick,
+}) => {
   const classes = useStyles()
 
   if (error) {
@@ -25,8 +33,13 @@ const DashboardCard: FunctionComponent<Props> = ({title, loading = false, error,
         </Box>
       ) : (
         <>
-          <Box pb={2}>
+          <Box pb={2} display="flex" flexDirection="row" alignItems="center">
             <Typography variant="h5">{title}</Typography>
+            {title === "Ingredients" ? (
+              <Box ml={2} onClick={handleIconClick}>
+                <FormatListBulletedIcon />
+              </Box>
+            ) : null}
           </Box>
           <>{children}</>
         </>
