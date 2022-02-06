@@ -96,6 +96,8 @@ export const GET_RECIPE_BY_ID = gql`
         id
         ingredient
       }
+      recipeNotes
+      recipeUrl
     }
   }
 `

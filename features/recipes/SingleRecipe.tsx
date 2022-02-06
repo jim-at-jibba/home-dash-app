@@ -63,7 +63,9 @@ const SingleRecipe: FunctionComponent = () => {
     categories,
     course,
     image,
+    recipeNotes,
   } = data.getRecipeById
+  console.log({recipeNotes})
   return (
     <Content>
       <Grid container direction="column" spacing={4}>
@@ -143,6 +145,14 @@ const SingleRecipe: FunctionComponent = () => {
               </Box>
             </DashboardCard>
           </Grid>
+        </Grid>
+        <Grid item xs={12} lg={4}>
+          <DashboardCard>
+            <Typography variant="h4" color="secondary">
+              Notes:
+            </Typography>
+            <Typography variant="body1">{recipeNotes}</Typography>
+          </DashboardCard>
         </Grid>
         <Grid container item xs={12} spacing={2}>
           <Grid item xs={6}>
