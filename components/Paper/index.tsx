@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: "column",
     padding: theme.spacing(2),
     paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
     alignItems: "center",
     minHeight: "60px",
     height: "100%",

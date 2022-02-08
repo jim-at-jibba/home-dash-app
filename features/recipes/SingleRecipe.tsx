@@ -11,24 +11,37 @@ import TimerIcon from "@material-ui/icons/Timer"
 import React, {FunctionComponent, useState} from "react"
 import {useGetRecipeByIdLazyQuery} from "src/generated/graphql"
 
-// const useStyles = makeStyles((theme: Theme) =>
-//   createStyles({
-//     modal: {
-//       position: "absolute",
-//       top: "50%",
-//       left: "50%",
-//       transform: "translate(-50%, -50%)",
-//       width: 400,
-//       background: `${theme.palette.primary.dark}`,
-//       border: "2px solid #000",
-//       boxShadow: "24",
-//       padding: 4,
-//     },
-//   }),
-// )
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    info: {
+      [theme.breakpoints.down("sm")]: {
+        flexDirection: "column",
+      },
+      [theme.breakpoints.up("md")]: {
+        flexDirection: "row",
+      },
+    },
+    serves: {
+      [theme.breakpoints.down("sm")]: {
+        marginLeft: 0,
+      },
+      [theme.breakpoints.up("md")]: {
+        marginLeft: 40,
+      },
+    },
+    image: {
+      [theme.breakpoints.down("sm")]: {
+        width: "100%",
+      },
+      [theme.breakpoints.up("md")]: {
+        maxWidth: 345,
+      },
+    },
+  }),
+)
 
 const SingleRecipe: FunctionComponent = () => {
-  // const classes = useStyles()
+  const classes = useStyles()
   const {matches, params} = useMatchPath("/recipes/:id")
   const [getRecipes, {data, loading, error}] = useGetRecipeByIdLazyQuery()
 
@@ -72,7 +85,7 @@ const SingleRecipe: FunctionComponent = () => {
         <Grid container item xs={12} spacing={2}>
           <Grid item xs={12} lg={4}>
             <DashboardCard>
-              <img src={image} alt={`${name} recipe`} width={"100%"} height="auto" />
+              <img className={classes.image} src={image} alt={`${name} recipe`} height="auto" />
             </DashboardCard>
           </Grid>
           <Grid item lg={8} xs={12}>
@@ -93,8 +106,8 @@ const SingleRecipe: FunctionComponent = () => {
                   </Box>
                 </Box>
                 <Box
+                  className={classes.info}
                   display="flex"
-                  flexDirection="row"
                   mx={1}
                   my={3}
                   justifyContent="flex-start"
@@ -111,7 +124,7 @@ const SingleRecipe: FunctionComponent = () => {
                       </Typography>
                     </Box>
                   </Box>
-                  <Box display="flex" flexDirection="row" ml={5}>
+                  <Box className={classes.serves} display="flex" flexDirection="row">
                     <RestaurantIcon color="secondary" />
                     <Box ml={2}>
                       <Typography variant="body1">
@@ -145,17 +158,17 @@ const SingleRecipe: FunctionComponent = () => {
               </Box>
             </DashboardCard>
           </Grid>
-        </Grid>
-        <Grid item xs={12} lg={4}>
-          <DashboardCard>
-            <Typography variant="h4" color="secondary">
-              Notes:
-            </Typography>
-            <Typography variant="body1">{recipeNotes}</Typography>
-          </DashboardCard>
+          <Grid item xs={12}>
+            <DashboardCard>
+              <Typography variant="h4" color="secondary">
+                Notes:
+              </Typography>
+              <Typography variant="body1">{recipeNotes}</Typography>
+            </DashboardCard>
+          </Grid>
         </Grid>
         <Grid container item xs={12} spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={12} lg={6}>
             <DashboardCard title="Ingredients" handleIconClick={copyIngrdientsList}>
               <Box display="flex" flexDirection="column" alignItems="flex-start" width="100%">
                 <List aria-label="secondary mailbox folders">
@@ -170,7 +183,7 @@ const SingleRecipe: FunctionComponent = () => {
               </Box>
             </DashboardCard>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} lg={6}>
             <DashboardCard title="Steps">
               <Box display="flex" flexDirection="column" alignItems="flex-start" width="100%">
                 <List aria-label="secondary mailbox folders">
