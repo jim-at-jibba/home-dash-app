@@ -72,7 +72,7 @@ const SingleRecipe: FunctionComponent = () => {
         <Grid container item xs={12} spacing={2}>
           <Grid item xs={12} lg={4}>
             <DashboardCard>
-              <img src={image} alt={`${name} recipe`} width={345} height="auto" />
+              <img src={image} alt={`${name} recipe`} width={"100%"} height="auto" />
             </DashboardCard>
           </Grid>
           <Grid item lg={8} xs={12}>
