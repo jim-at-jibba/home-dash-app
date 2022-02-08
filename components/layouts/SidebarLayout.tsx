@@ -42,6 +42,7 @@ const SidebarLayout: FunctionComponent = ({children}) => {
 }
 
 const MainContent: FunctionComponent = ({children}) => {
+  const {width} = useWindowDimensions()
   return (
     <Box
       component="main"
@@ -49,9 +50,9 @@ const MainContent: FunctionComponent = ({children}) => {
       overflow="scroll"
       flexBasis={0}
       flexGrow={999}
-      marginTop={8}
+      marginTop={width && width < 1000 ? 2 : 8}
     >
-      <Box margin={4}>{children}</Box>
+      <Box margin={width && width < 1000 ? 2 : 4}>{children}</Box>
     </Box>
   )
 }

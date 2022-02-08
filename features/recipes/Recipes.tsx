@@ -19,6 +19,7 @@ const Recipes: FunctionComponent = () => {
   }
 
   const {getRecipes} = data
+
   return (
     <Content>
       <Box display="flex" flexDirection="row" flexWrap="wrap">

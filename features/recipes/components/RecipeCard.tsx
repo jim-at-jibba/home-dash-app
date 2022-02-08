@@ -20,7 +20,7 @@ import {useRouter} from "next/router"
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: 345,
+      maxWidth: 345,
     },
     media: {
       height: 0,
