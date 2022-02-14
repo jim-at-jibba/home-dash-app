@@ -11,6 +11,7 @@ const SidebarLayout: FunctionComponent = ({children}) => {
   const {width} = useWindowDimensions()
 
   useEffect(() => {
+    // @ts-expect-error
     if (width != null && width < 1000) {
       setOpen(false)
     } else {
@@ -50,9 +51,10 @@ const MainContent: FunctionComponent = ({children}) => {
       overflow="scroll"
       flexBasis={0}
       flexGrow={999}
+      // @ts-expect-error
       marginTop={width && width < 1000 ? 2 : 8}
     >
-      <Box margin={width && width < 1000 ? 2 : 4}>{children}</Box>
+      <Box>{children}</Box>
     </Box>
   )
 }
