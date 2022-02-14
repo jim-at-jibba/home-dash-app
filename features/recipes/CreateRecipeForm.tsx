@@ -248,6 +248,8 @@ const CreateRecipeForm: FunctionComponent = () => {
                   // steps: [{stepNumber: 1, stepDescription: "Cut shit up"}],
                   // ingredients: [{ingredient: "50g carrots"}],
                   ...values,
+                  recipeNotes: "",
+                  recipeUrl: "",
                 },
               },
               update() {

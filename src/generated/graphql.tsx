@@ -23,12 +23,6 @@ export type AirQuality = {
   pm10: Scalars['Float'];
 };
 
-export type AuthResponse = {
-  __typename?: 'AuthResponse';
-  token: Scalars['String'];
-  user: User;
-};
-
 export type CreateBbcRecipeInput = {
   url: Scalars['String'];
   courseId: Scalars['String'];
@@ -123,17 +117,11 @@ export type Mqtt = EnviroMessage | SwitchMessage | TemperatureMessage;
 
 export type Mutation = {
   __typename?: 'Mutation';
-  register: AuthResponse;
   createRecipe: RecipeFull;
   createFoodCategory: FoodCategories;
   createFoodCourse: FoodCourses;
   createRecipeFromBBC: CreateRecipeOutput;
   createImageSignature: ImageSignature;
-};
-
-
-export type MutationRegisterArgs = {
-  input: RegisterInput;
 };
 
 
@@ -158,7 +146,6 @@ export type MutationCreateRecipeFromBbcArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  me: Scalars['String'];
   getLatestMessage: Mqtt;
   getLatestAirQuality: LatestAirQualityOutput;
   getLastXDaysMessage: Array<Mqtt>;
@@ -264,13 +251,6 @@ export type RecipeSteps = {
   updatedAt: Scalars['DateTime'];
 };
 
-export type RegisterInput = {
-  username: Scalars['String'];
-  displayName: Scalars['String'];
-  email: Scalars['String'];
-  password: Scalars['String'];
-};
-
 export type StepsInput = {
   stepNumber: Scalars['Float'];
   stepDescription: Scalars['String'];
@@ -301,17 +281,6 @@ export type TemperatureMessage = {
   id: Scalars['ID'];
   topic: Scalars['String'];
   message: Temperature;
-  createdAt: Scalars['DateTime'];
-  updatedAt: Scalars['DateTime'];
-};
-
-export type User = {
-  __typename?: 'User';
-  id: Scalars['ID'];
-  username: Scalars['String'];
-  email: Scalars['String'];
-  displayName: Scalars['String'];
-  avatar: Scalars['String'];
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
 };
